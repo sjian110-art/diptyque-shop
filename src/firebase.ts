@@ -3,12 +3,12 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDTA03MwZrAocP9OVcSA3kHI9rIchDYdJM",
-  authDomain: "diptyque-ecommerce.firebaseapp.com",
-  projectId: "diptyque-ecommerce",
-  storageBucket: "diptyque-ecommerce.firebasestorage.app",
-  messagingSenderId: "158445928824",
-  appId: "1:158445928824:web:7af46ac700cb7a6ec7c88d"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

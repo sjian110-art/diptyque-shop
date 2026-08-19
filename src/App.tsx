@@ -17,23 +17,36 @@ import type { CompareItem } from './components/MyPage';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import type { User } from 'firebase/auth';
+import { initKakao, getStoredKakaoUser, kakaoLogout } from './kakaoAuth';
+import type { KakaoUserProfile } from './kakaoAuth';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage'>('home');
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [kakaoUser, setKakaoUser] = useState<KakaoUserProfile | null>(null);
 
   // Compare list shared across product detail & mypage
   const [compareList, setCompareList] = useState<CompareItem[]>([]);
 
-  // Set up user authentication tracking
+  // Initialise Kakao SDK and restore any stored session
+  useEffect(() => {
+    initKakao();
+    const stored = getStoredKakaoUser();
+    if (stored) setKakaoUser(stored);
+  }, []);
+
+  // Set up Firebase Auth state tracking
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
     return () => unsubscribe();
   }, []);
+
+  // True when either Firebase or Kakao user is signed in
+  const isLoggedIn = !!currentUser || !!kakaoUser;
 
   // States to persist complete order details for success screen
   const [recipientName, setRecipientName] = useState('');
@@ -110,7 +123,7 @@ function App() {
 
   // Navigate to MY page (if logged in → mypage, else → login)
   const handleMyClick = () => {
-    if (currentUser) {
+    if (isLoggedIn) {
       setCurrentPage('mypage');
     } else {
       setCurrentPage('login');
@@ -154,6 +167,11 @@ function App() {
       <LoginPage
         onBack={() => setCurrentPage('home')}
         currentUser={currentUser}
+        kakaoUser={kakaoUser}
+        onKakaoLogin={(user) => {
+          setKakaoUser(user);
+          setCurrentPage('mypage');
+        }}
         onNavigateMyPage={() => setCurrentPage('mypage')}
       />
     );
@@ -165,13 +183,18 @@ function App() {
       <>
         <MyPage
           currentUser={currentUser}
+          kakaoUser={kakaoUser}
           cartItems={cartItems}
           cartCount={totalCartCount}
           compareList={compareList}
           onOpenCart={() => setCartDrawerOpen(true)}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onNavigateDetail={() => setCurrentPage('detail')}
-          onLogout={() => setCurrentPage('home')}
+          onLogout={async () => {
+            await kakaoLogout();
+            setKakaoUser(null);
+            setCurrentPage('home');
+          }}
         />
         <CartDrawer
           isOpen={cartDrawerOpen}

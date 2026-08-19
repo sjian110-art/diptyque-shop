@@ -6,6 +6,7 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import type { CartItemType } from './CartDrawer';
+import type { KakaoUserProfile } from '../kakaoAuth';
 
 export interface CompareItem {
   id: string;
@@ -16,6 +17,7 @@ export interface CompareItem {
 
 interface MyPageProps {
   currentUser: User | null;
+  kakaoUser?: KakaoUserProfile | null;
   cartItems: CartItemType[];
   cartCount: number;
   compareList: CompareItem[];
@@ -49,6 +51,7 @@ const FOOTER_LINKS = ['SUSTAINABILITY', 'SHIPPING', 'CONTACT', 'BOUTIQUES'];
 
 export const MyPage: React.FC<MyPageProps> = ({
   currentUser,
+  kakaoUser,
   cartCount,
   compareList,
   onOpenCart,
@@ -58,15 +61,24 @@ export const MyPage: React.FC<MyPageProps> = ({
 }) => {
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      onLogout();
+      // Firebase logout if signed in via Firebase
+      if (currentUser) await signOut(auth);
+      onLogout(); // App.tsx handles Kakao logout too
     } catch (err) {
       console.error('Logout failed:', err);
+      onLogout();
     }
   };
 
-  const displayName = currentUser?.displayName || 'Diptyque Member';
-  const photoURL = currentUser?.photoURL || null;
+  // Derive display info from whichever auth provider is active
+  const displayName =
+    currentUser?.displayName ||
+    kakaoUser?.displayName ||
+    'Diptyque Member';
+  const photoURL =
+    currentUser?.photoURL ||
+    kakaoUser?.photoURL ||
+    null;
 
   // Scroll to top on mount
   useEffect(() => {

@@ -10,6 +10,8 @@ import {
 } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { kakaoLogin } from '../kakaoAuth';
+import type { KakaoUserProfile } from '../kakaoAuth';
 
 // Import icons as ES modules
 import kakaoIconImg from '../../assets_1/Kakao_Login.png';
@@ -19,10 +21,18 @@ import mailIconImg from '../../assets_1/Mail_Login.png';
 interface LoginPageProps {
   onBack: () => void;
   currentUser: User | null;
+  kakaoUser?: KakaoUserProfile | null;
+  onKakaoLogin?: (user: KakaoUserProfile) => void;
   onNavigateMyPage?: () => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onBack, currentUser, onNavigateMyPage }) => {
+export const LoginPage: React.FC<LoginPageProps> = ({
+  onBack,
+  currentUser,
+  kakaoUser,
+  onKakaoLogin,
+  onNavigateMyPage,
+}) => {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,20 +51,46 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, currentUser, onNav
           photoURL: user.photoURL || '',
           createdAt: serverTimestamp(),
         });
-        console.log('Created new user profile in Firestore');
       } else {
         await setDoc(userRef, {
           displayName: user.displayName || docSnap.data()?.displayName || '',
           photoURL: user.photoURL || docSnap.data()?.photoURL || '',
         }, { merge: true });
-        console.log('Merged user profile updates in Firestore');
       }
     } catch (err) {
       console.error('Failed to save user profile in Firestore:', err);
     }
   };
 
-  // Handle Google OAuth sign-in flow
+  // ── Kakao login handler ─────────────────────────────────────────────────
+  const handleKakaoSignIn = async () => {
+    try {
+      const user = await kakaoLogin();
+      // Also save to Firestore using Kakao uid
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(userRef);
+        if (!docSnap.exists()) {
+          await setDoc(userRef, {
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email || '',
+            photoURL: user.photoURL || '',
+            provider: 'kakao',
+            createdAt: serverTimestamp(),
+          });
+        }
+      } catch (fsErr) {
+        console.warn('[Kakao] Firestore save failed (non-critical):', fsErr);
+      }
+      if (onKakaoLogin) onKakaoLogin(user);
+    } catch (err: any) {
+      console.error('[Kakao] sign-in failed:', err);
+      alert(`카카오 로그인 실패: ${err?.message ?? String(err)}`);
+    }
+  };
+
+  // ── Google OAuth sign-in flow ───────────────────────────────────────────
   const handleGoogleSignIn = async () => {
     console.log('Google Sign-In button clicked');
     try {
@@ -108,7 +144,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, currentUser, onNav
     }
   };
 
-  // Auto-redirect to MyPage after 5 seconds on welcome screen
+  // Auto-redirect: logged in via Kakao
+  useEffect(() => {
+    if (kakaoUser && onNavigateMyPage) {
+      onNavigateMyPage();
+    }
+  }, [kakaoUser, onNavigateMyPage]);
+
+  // Auto-redirect to MyPage after 5 seconds on welcome screen (Firebase)
   useEffect(() => {
     if (currentUser && onNavigateMyPage) {
       const timer = setTimeout(() => {
@@ -339,7 +382,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBack, currentUser, onNav
         {/* Kakao Login */}
         <button 
           className="login-btn" 
-          onClick={() => alert('카카오 로그인 연동 준비 중')}
+          onClick={handleKakaoSignIn}
         >
           <img 
             src={kakaoIconImg} 
