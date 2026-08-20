@@ -153,6 +153,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         customerName: recipient || ordererName,
         successUrl: `${window.location.origin}/?tossSuccess=true`,
         failUrl: `${window.location.origin}/?tossFail=true`,
+        windowState: "POPUP", // 모바일 환경 대다수 브라우저에서 잘리지 않는 전체화면 팝업 처리
       }).catch((err: any) => {
         console.error('Toss Payments request error:', err);
         alert(`결제 요청 실패: ${err.message || err}`);
@@ -180,6 +181,20 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     <div style={styles.pageContainer} className="animate-fade-in">
       {/* Self-contained CSS for high-performance form styling, animation, and transitions */}
       <style>{`
+        /* 토스페이먼츠 모달 및 레이어 iframe이 모바일 프레임(390px) 컨테이너 제약을 무시하고
+           전체 화면(100vw/100vh) 기준으로 정상 노출되도록 z-index 및 레이아웃 강제 오버라이딩 */
+        iframe[src*="tosspayments"],
+        div[class*="toss-payments"] {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          max-width: 100vw !important;
+          max-height: 100vh !important;
+          z-index: 9999999 !important;
+        }
+
         /* Focus input border changes to solid black */
         .checkout-input:focus {
           border-color: #000000 !important;
