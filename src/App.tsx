@@ -27,6 +27,10 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [kakaoUser, setKakaoUser] = useState<KakaoUserProfile | null>(null);
 
+  // Navigation stack memory for returning to cart drawer on correct screen
+  const [backToCart, setBackToCart] = useState(false);
+  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage'>('home');
+
   // Compare list shared across product detail & mypage
   const [compareList, setCompareList] = useState<CompareItem[]>([]);
 
@@ -130,6 +134,28 @@ function App() {
     }
   };
 
+  // Navigate from Cart Drawer card to product details
+  const handleCartProductClick = (productId: string) => {
+    if (productId === 'doson') {
+      setPreCartPage(currentPage);
+      setBackToCart(true);
+      setCartDrawerOpen(false);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      setCurrentPage('detail');
+    }
+  };
+
+  // Navigate back from detail page (checking if we need to reopen Cart Drawer)
+  const handleDetailBack = () => {
+    if (backToCart) {
+      setBackToCart(false);
+      setCartDrawerOpen(true);
+      setCurrentPage(preCartPage);
+    } else {
+      setCurrentPage('home');
+    }
+  };
+
   // Triggered on checkout confirmation modal submit
   const handlePaymentSuccess = (recipient: string, address: string) => {
     setRecipientName(recipient);
@@ -189,7 +215,7 @@ function App() {
           compareList={compareList}
           onOpenCart={() => setCartDrawerOpen(true)}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
-          onNavigateDetail={() => setCurrentPage('detail')}
+          onNavigateDetail={() => { setCurrentPage('detail'); window.scrollTo({ top: 0, behavior: 'instant' }); }}
           onLogout={async () => {
             await kakaoLogout();
             setKakaoUser(null);
@@ -205,6 +231,7 @@ function App() {
             setCartDrawerOpen(false);
             setCurrentPage('checkout');
           }}
+          onProductClick={handleCartProductClick}
         />
       </>
     );
@@ -215,7 +242,7 @@ function App() {
     return (
       <>
         <ProductDetailPage 
-          onBack={() => setCurrentPage('home')}
+          onBack={handleDetailBack}
           onAddToCart={handleAddToCart}
           onOpenCart={() => setCartDrawerOpen(true)}
           cartCount={totalCartCount}
@@ -231,6 +258,7 @@ function App() {
             setCartDrawerOpen(false);
             setCurrentPage('checkout');
           }}
+          onProductClick={handleCartProductClick}
         />
       </>
     );
@@ -282,6 +310,7 @@ function App() {
             setCartDrawerOpen(false);
             setCurrentPage('checkout');
           }}
+          onProductClick={handleCartProductClick}
         />
         {showSuccessToast && (
           <div style={styles.toast} className="animate-toast-complete">
@@ -322,6 +351,7 @@ function App() {
         <CategorySection />
         <BestSellers onProductClick={(id) => {
           if (id === 'doson') {
+            window.scrollTo({ top: 0, behavior: 'instant' });
             setCurrentPage('detail');
           } else {
             console.log(`Product clicked: ${id}`);
@@ -347,6 +377,7 @@ function App() {
           setCartDrawerOpen(false);
           setCurrentPage('checkout');
         }}
+        onProductClick={handleCartProductClick}
       />
     </>
   );

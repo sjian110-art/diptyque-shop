@@ -17,6 +17,7 @@ interface CartDrawerProps {
   cartItems: CartItemType[];
   onUpdateQuantity: (id: string, qty: number) => void;
   onCheckoutClick?: () => void;
+  onProductClick?: (productId: string) => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -25,6 +26,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   cartItems,
   onUpdateQuantity,
   onCheckoutClick,
+  onProductClick,
 }) => {
   const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
 
@@ -255,6 +257,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     key={item.id} 
                     style={styles.itemCard}
                     className={deletingItemId === item.id ? 'fade-out-item' : ''}
+                    onClick={() => {
+                      if (onProductClick) {
+                        const baseId = item.id.split('-')[0];
+                        onProductClick(baseId);
+                      }
+                    }}
                   >
                     {/* Item Image Card */}
                     <div style={styles.imageCard}>
@@ -272,10 +280,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                       {/* Quantity counter and Price */}
                       <div style={styles.itemRow}>
-                        <div style={styles.counter}>
+                        <div style={styles.counter} onClick={(e) => e.stopPropagation()}>
                           <button 
                             className="counter-btn"
-                            onClick={() => handleDecrement(item)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDecrement(item);
+                            }}
                             aria-label="Decrease quantity"
                           >
                             <Minus size={10} strokeWidth={2} />
@@ -283,7 +294,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           <span style={styles.counterVal}>{item.quantity}</span>
                           <button 
                             className="counter-btn"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onUpdateQuantity(item.id, item.quantity + 1);
+                            }}
                             aria-label="Increase quantity"
                           >
                             <Plus size={10} strokeWidth={2} />
@@ -299,7 +313,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     {/* Far right individual delete (X) button */}
                     <button 
                       className="item-delete-btn"
-                      onClick={() => handleDeleteItem(item)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteItem(item);
+                      }}
                       aria-label="Delete item"
                     >
                       <X size={14} strokeWidth={1.5} />
@@ -414,6 +431,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     gap: '16px',
     alignItems: 'center',
     width: '100%',
+    cursor: 'pointer',
   },
   imageCard: {
     width: '64px',
