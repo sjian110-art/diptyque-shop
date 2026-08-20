@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Header } from './Header';
 import type { CartItemType } from './CartDrawer';
 import { ChevronDown, Search } from 'lucide-react';
@@ -239,28 +240,29 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }
 
         .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background-color: rgba(0, 0, 0, 0.4);
-          backdrop-filter: blur(1.5px);
-          z-index: 2000;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          background-color: rgba(0, 0, 0, 0.4) !important;
+          backdrop-filter: blur(1.5px) !important;
+          z-index: 9999999 !important;
         }
 
         .modal-panel {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: calc(100% - 40px);
-          max-width: 320px;
-          background-color: #ffffff;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-          z-index: 2001;
-          color: #000000;
-          padding: 24px;
+          position: fixed !important;
+          top: 50% !important;
+          left: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          width: calc(100% - 40px) !important;
+          max-width: 320px !important;
+          background-color: #ffffff !important;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+          z-index: 10000000 !important;
+          color: #000000 !important;
+          padding: 24px !important;
+          box-sizing: border-box !important;
         }
       `}</style>
 
@@ -623,7 +625,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       </div>
 
       {/* Order Confirmation Modal */}
-      {showConfirmModal && (
+      {showConfirmModal && createPortal(
         <>
           {/* Overlay backdrop */}
           <div className="modal-overlay" onClick={closeModal} />
@@ -672,7 +674,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               </button>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
