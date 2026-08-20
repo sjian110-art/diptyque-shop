@@ -49,6 +49,74 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // 토스 페이먼츠 결제 승인 콜백 및 백업 정보 복원 감지
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tossSuccess = params.get('tossSuccess');
+    const tossFail = params.get('tossFail');
+    const paymentKey = params.get('paymentKey');
+
+    if (tossSuccess && paymentKey) {
+      // 1. 배송 정보 복원
+      const cachedRecipient = localStorage.getItem('pending_order_recipient') || '홍길동';
+      const cachedAddress = localStorage.getItem('pending_order_address') || '서울시 도산대로 178';
+      const cachedCart = localStorage.getItem('pending_order_cart');
+
+      if (cachedCart) {
+        try {
+          const parsedCart = JSON.parse(cachedCart) as CartItemType[];
+          // 장바구니 품목을 임시 복원하여 결제 성공 데이터 합산 계산이 되도록 합니다.
+          setCartItems(parsedCart);
+          
+          // 2. 결제 완료 데이터 적용
+          setRecipientName(cachedRecipient);
+          setShippingAddress(cachedAddress);
+          
+          const subtotal = parsedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+          setOrderTotal(subtotal);
+          
+          const totalQty = parsedCart.reduce((sum, item) => sum + item.quantity, 0);
+          setOrderCount(totalQty);
+          
+          if (parsedCart.length > 0) {
+            const firstItem = parsedCart[0];
+            const summaryText = parsedCart.length === 1
+              ? `${firstItem.name} ${firstItem.volume}`
+              : `${firstItem.name} ${firstItem.volume} 외 ${parsedCart.length - 1}건`;
+            setOrderSummaryText(summaryText);
+          }
+          
+          // 3. 결제 완료 완료 토스트 및 페이지 이동 후 장바구니 비우기
+          setShowSuccessToast(true);
+          setTimeout(() => {
+            setShowSuccessToast(false);
+            setCurrentPage('complete');
+            setCartItems([]); // 결제 완료되었으므로 장바구니 비움
+          }, 2000);
+
+        } catch (e) {
+          console.error('Failed to restore cached cart:', e);
+        }
+      }
+
+      // 4. 로컬스토리지 임시 데이터 정리
+      localStorage.removeItem('pending_order_recipient');
+      localStorage.removeItem('pending_order_address');
+      localStorage.removeItem('pending_order_cart');
+
+      // 5. 브라우저 URL 쿼리 파라미터 클리닝 (깔끔한 UI 유지)
+      window.history.replaceState({}, '', window.location.origin);
+    } else if (tossFail) {
+      const code = params.get('code');
+      const message = params.get('message') || '결제가 실패했습니다.';
+      alert(`결제 실패 [${code}]: ${message}`);
+      
+      // 결제 페이지(checkout)로 강제 이동하여 재시도 가능하게 설정
+      setCurrentPage('checkout');
+      window.history.replaceState({}, '', window.location.origin);
+    }
+  }, []);
+
   // True when either Firebase or Kakao user is signed in
   const isLoggedIn = !!currentUser || !!kakaoUser;
 
