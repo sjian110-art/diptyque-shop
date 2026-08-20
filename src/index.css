@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
   --bg-color: #000000;
   --text-color: #ffffff;
@@ -6,8 +8,8 @@
   --cream-text: #000000;
   --border-color: rgba(255, 255, 255, 0.15);
   --border-light: rgba(255, 255, 255, 0.08);
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
+  --font-sans: 'Inter', 'Noto Serif KR', system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -27,6 +29,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   overflow-y: scroll;
+  overflow-anchor: none; /* 페이지 교체 시 브라우저 scroll anchoring 비활성화 */
 }
 
 /* Scrollbar styling */
@@ -57,6 +60,7 @@ body {
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 70px; /* Padding for bottom navigation */
+  overflow-anchor: none; /* scroll anchoring 비활성화 */
 }
 
 /* On real mobile viewports, remove the centering box shadow and borders */
