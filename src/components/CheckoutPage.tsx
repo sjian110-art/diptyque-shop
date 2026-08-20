@@ -60,7 +60,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [promoCode, setPromoCode] = useState('');
 
   // 4. Payment Method states
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'naver' | 'kakao' | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'toss' | 'naver' | 'kakao' | 'transfer' | null>(null);
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
@@ -203,7 +203,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
         /* Payment toggles */
         .payment-toggle-btn {
-          flex: 1;
+          flex: 1 1 calc(50% - 8px); /* 2열 정렬용 flex basis 적용 */
+          min-width: 130px; /* 극단적인 뷰포트 축소 방지 */
           height: 44px;
           border-radius: 0px;
           font-family: var(--font-sans);
@@ -234,11 +235,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         @keyframes modalFadeInScale {
           0% {
             opacity: 0;
-            transform: translate(-50%, -48%) scale(0.96);
+            transform: scale(0.96);
           }
           100% {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+            transform: scale(1);
           }
         }
 
@@ -259,11 +260,16 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
 
         .modal-panel {
           position: fixed !important;
-          top: 50% !important;
-          left: 50% !important;
-          transform: translate(-50%, -50%) !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
+          margin: auto !important; /* transform을 쓰지 않고 viewport 한가운데에 완전 밀착 고정 */
           width: calc(100% - 40px) !important;
           max-width: 320px !important;
+          height: fit-content !important;
+          max-height: 85vh !important;
+          overflow-y: auto !important;
           background-color: #ffffff !important;
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
           z-index: 10000000 !important;
@@ -500,6 +506,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               CREDIT CARD
             </button>
             <button 
+              className={`payment-toggle-btn ${paymentMethod === 'toss' ? 'active' : 'inactive'}`}
+              onClick={() => setPaymentMethod('toss')}
+            >
+              <span style={{ color: '#0064ff', fontWeight: 700 }}>TOSS</span>{' '}
+              <span style={{ color: paymentMethod === 'toss' ? '#ffffff' : '#000000' }}>PAY</span>
+            </button>
+            <button 
               className={`payment-toggle-btn ${paymentMethod === 'naver' ? 'active' : 'inactive'}`}
               onClick={() => setPaymentMethod('naver')}
             >
@@ -510,6 +523,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               onClick={() => setPaymentMethod('kakao')}
             >
               KAKAO PAY
+            </button>
+            <button 
+              className={`payment-toggle-btn ${paymentMethod === 'transfer' ? 'active' : 'inactive'}`}
+              onClick={() => setPaymentMethod('transfer')}
+            >
+              무통장 입금
             </button>
           </div>
 
@@ -928,6 +947,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   paymentMethodsGrid: {
     display: 'flex',
+    flexWrap: 'wrap', // 두 줄 개행 지원
     gap: '8px',
     width: '100%',
     marginBottom: '20px',
