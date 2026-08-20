@@ -169,18 +169,8 @@ function App() {
   const [orderCount, setOrderCount] = useState(0);
   const [orderSummaryText, setOrderSummaryText] = useState('');
   
-  // Pre-populate cart with Do Son 75ML to match Figma mockup initial render
-  const [cartItems, setCartItems] = useState<CartItemType[]>([
-    {
-      id: 'doson-75ml',
-      name: 'Do Son',
-      subName: '오 드 퍼퓸',
-      volume: '75ML',
-      price: 269000,
-      quantity: 1,
-      image: '/assets_1/DoSon.png',
-    }
-  ]);
+  // Pre-populate cart with Do Son 75ML to match Figma mockup initial render (Modified to start empty as requested)
+  const [cartItems, setCartItems] = useState<CartItemType[]>([]);
 
   // Handle Add to Cart event from ProductDetailPage
   const handleAddToCart = (volume: string, quantity: number) => {
