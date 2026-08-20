@@ -121,46 +121,23 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setShowConfirmModal(false);
   };
 
-  // 토스 페이먼츠 결제창 실행 및 백업 핸들러
+  // 토스 페이먼츠 결제창 실행 및 백업 핸들러 (새 탭 전환 방식)
   const handleTossPayment = () => {
-    if (!(window as any).TossPayments) {
-      alert('토스 페이먼츠 결제 모듈이 아직 로드되지 않았습니다. 잠시 후 다시 눌러주세요.');
-      return;
-    }
-
     try {
-      // 1. 페이지 전환 전 상태 소실 방지를 위한 로컬스토리지 백업
+      // 1. 새 탭(전체 화면)으로 데이터를 공유하기 위한 로컬스토리지 백업
       localStorage.setItem('pending_order_recipient', recipient);
       localStorage.setItem('pending_order_address', `${address} ${detailAddress}`.trim());
       localStorage.setItem('pending_order_cart', JSON.stringify(cartItems));
 
-      // 2. 토스 SDK 인스턴스화
-      const tossPayments = (window as any).TossPayments('test_ck_vZnjEJeQVxPeEkJ25KyDVPmOoBN0');
-
-      // 주문 ID 생성 (고유 키)
-      const orderId = `order_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
+      // 2. 브라우저 전체 화면(새 탭)에서 결제 페이지 구동
+      const redirectUrl = `${window.location.origin}/?tossPayRedirect=true`;
+      window.open(redirectUrl, '_blank');
       
-      // 상품 대표명 요약
-      const orderName = cartItems.length > 0
-        ? `${cartItems[0].name} ${cartItems[0].volume}${cartItems.length > 1 ? ` 외 ${cartItems.length - 1}건` : ''}`
-        : '디프티크 향수';
-
-      // 3. 결제창 요청 (가장 기본적이고 테스트가 원활한 '카드' 결제창)
-      tossPayments.requestPayment('카드', {
-        amount: totalPayment,
-        orderId: orderId,
-        orderName: orderName,
-        customerName: recipient || ordererName,
-        successUrl: `${window.location.origin}/?tossSuccess=true`,
-        failUrl: `${window.location.origin}/?tossFail=true`,
-        windowState: "POPUP", // 모바일 환경 대다수 브라우저에서 잘리지 않는 전체화면 팝업 처리
-      }).catch((err: any) => {
-        console.error('Toss Payments request error:', err);
-        alert(`결제 요청 실패: ${err.message || err}`);
-      });
+      // 모달 정리
+      closeModal();
     } catch (error: any) {
-      console.error('Toss Payments initialization failed:', error);
-      alert(`토스 연동 에러: ${error.message || error}`);
+      console.error('Failed to open payment tab:', error);
+      alert(`새 창 결제 열기 실패: ${error.message || error}`);
     }
   };
 

@@ -27,6 +27,9 @@ function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [kakaoUser, setKakaoUser] = useState<KakaoUserProfile | null>(null);
 
+  // 토스 결제창 새 탭 실행 로딩 제어 상태
+  const [isTossPaying, setIsTossPaying] = useState(false);
+
   // Navigation stack memory for returning to cart drawer on correct screen
   const [backToCart, setBackToCart] = useState(false);
   const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage'>('home');
@@ -47,6 +50,57 @@ function App() {
       setCurrentUser(user);
     });
     return () => unsubscribe();
+  }, []);
+
+  // 새 탭 결제창 이동 파라미터 감지 및 결제 모듈 즉각 기동
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tossPayRedirect = params.get('tossPayRedirect');
+
+    if (tossPayRedirect === 'true') {
+      setIsTossPaying(true);
+
+      // 1. 토스 결제 라이브러리 스크립트 동적 로드
+      const script = document.createElement('script');
+      script.src = 'https://js.tosspayments.com/v1/payment';
+      script.async = true;
+      script.onload = () => {
+        // 스크립트 로드 완료 후 즉각 결제창 발사
+        try {
+          const cachedRecipient = localStorage.getItem('pending_order_recipient') || '홍길동';
+          const cachedCart = localStorage.getItem('pending_order_cart');
+
+          if (!cachedCart) {
+            alert('결제할 장바구니 정보가 소실되었습니다.');
+            window.close();
+            return;
+          }
+
+          const parsedCart = JSON.parse(cachedCart) as CartItemType[];
+          const subtotal = parsedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+          const totalPayment = subtotal; // 배송비 및 할인 0원 가정
+
+          const tossPayments = (window as any).TossPayments('test_ck_vZnjEJeQVxPeEkJ25KyDVPmOoBN0');
+          const orderId = `order_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
+          const orderName = parsedCart.length > 0
+            ? `${parsedCart[0].name} ${parsedCart[0].volume}${parsedCart.length > 1 ? ` 외 ${parsedCart.length - 1}건` : ''}`
+            : '디프티크 향수';
+
+          tossPayments.requestPayment('카드', {
+            amount: totalPayment,
+            orderId: orderId,
+            orderName: orderName,
+            customerName: cachedRecipient,
+            successUrl: `${window.location.origin}/?tossSuccess=true`,
+            failUrl: `${window.location.origin}/?tossFail=true`,
+          });
+        } catch (err: any) {
+          console.error('Toss redirect payment fail:', err);
+          alert(`결제창 로딩 실패: ${err.message || err}`);
+        }
+      };
+      document.head.appendChild(script);
+    }
   }, []);
 
   // 토스 페이먼츠 결제 승인 콜백 및 백업 정보 복원 감지
@@ -254,6 +308,35 @@ function App() {
     setCurrentPage('home');
     window.scrollTo(0, 0);
   };
+
+  // 토스 결제창 이동 로딩 화면 전체화면 렌더링
+  if (isTossPaying) {
+    return (
+      <div style={{
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: '#000000',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color: '#ffffff',
+        fontFamily: 'var(--font-serif)',
+        textAlign: 'center',
+        padding: '24px',
+        boxSizing: 'border-box'
+      }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 300, letterSpacing: '4px', marginBottom: '16px' }}>DIPTYQUE PARIS</h1>
+        <div style={{ width: '24px', height: '24px', border: '1px solid rgba(255, 255, 255, 0.2)', borderTopColor: '#ffffff', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '24px' }} />
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: '11px', letterSpacing: '1px', opacity: 0.6 }}>안전한 토스 페이먼츠 결제창으로 이동하고 있습니다.</p>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   // Render Login Page Full-screen
   if (currentPage === 'login') {
