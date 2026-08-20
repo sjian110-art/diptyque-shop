@@ -516,13 +516,15 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               className={`payment-toggle-btn ${paymentMethod === 'naver' ? 'active' : 'inactive'}`}
               onClick={() => setPaymentMethod('naver')}
             >
-              NAVER PAY
+              <span style={{ color: '#03c75a', fontWeight: 700 }}>NAVER</span>{' '}
+              <span style={{ color: paymentMethod === 'naver' ? '#ffffff' : '#000000' }}>PAY</span>
             </button>
             <button 
               className={`payment-toggle-btn ${paymentMethod === 'kakao' ? 'active' : 'inactive'}`}
               onClick={() => setPaymentMethod('kakao')}
             >
-              KAKAO PAY
+              <span style={{ color: paymentMethod === 'kakao' ? '#fee500' : '#e5a900', fontWeight: 700 }}>KAKAO</span>{' '}
+              <span style={{ color: paymentMethod === 'kakao' ? '#ffffff' : '#000000' }}>PAY</span>
             </button>
             <button 
               className={`payment-toggle-btn ${paymentMethod === 'transfer' ? 'active' : 'inactive'}`}
