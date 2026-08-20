@@ -118,3 +118,42 @@ button:active, a:active {
   background-color: var(--border-color);
   width: 100%;
 }
+
+/* ==========================================================================
+   Global Typography Force Override (Noto Serif KR)
+   ========================================================================== */
+
+/* 1. 상속 누락 및 인라인 글꼴 덮어씌움을 방지하기 위해 앱 내의 모든 한글 노출 요소를 Noto Serif KR로 강제 통일 */
+body, 
+button, 
+input, 
+select, 
+textarea, 
+span, 
+p, 
+a, 
+div, 
+label, 
+li, 
+ul, 
+ol, 
+h1, 
+h2, 
+h3, 
+h4, 
+h5, 
+h6 {
+  font-family: 'Inter', 'Noto Serif KR', system-ui, -apple-system, sans-serif !important;
+}
+
+/* 2. 영문 브랜드명 및 클래식 세리프 무드를 고수해야 할 타이틀 영역에만 제한적 예외 적용 */
+.font-serif,
+.header-logo,
+.footer-logo,
+.pageTitle,
+.itemName,
+.modalTitle,
+[style*="fontFamily: 'Playfair Display'"],
+[style*="fontFamily: var(--font-serif)"] {
+  font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif !important;
+}
