@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Heart, ChevronDown, Minus, Plus } from 'lucide-react';
 import type { CompareItem } from './MyPage';
 
@@ -83,6 +83,36 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedVolume, setSelectedVolume] = useState('75ML');
   const [quantity, setQuantity] = useState(1);
+
+  // 페이지 진입 시 항상 최상단으로 즉시 이동
+  // - history.scrollRestoration='manual': 브라우저의 자동 스크롤 복원 비활성화
+  // - double RAF: 첫 번째 프레임(DOM 배치) + 두 번째 프레임(레이아웃 완성) 이후 실행
+  // - 50ms 폴백: 이미지 로딩 등으로 인한 리플로우가 스크롤을 밀어내는 경우 차단
+  useEffect(() => {
+    const prevScrollRestoration = history.scrollRestoration;
+    history.scrollRestoration = 'manual';
+
+    let raf1: number;
+    let raf2: number;
+    let timer: ReturnType<typeof setTimeout>;
+
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        // 폴백: 이미지 로딩으로 인한 리플로우 이후에도 최상단 유지
+        timer = setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }, 50);
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      clearTimeout(timer);
+      history.scrollRestoration = prevScrollRestoration;
+    };
+  }, []);
 
   // Current product info for compare
   const THIS_PRODUCT: CompareItem = {
@@ -567,7 +597,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    overflowY: 'auto',
   },
   imageCardContainer: {
     width: 'calc(100% - 32px)',
