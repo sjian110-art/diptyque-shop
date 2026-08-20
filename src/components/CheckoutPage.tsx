@@ -64,6 +64,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
+  const [depositorName, setDepositorName] = useState('');
 
   // 5. Terms state
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -108,7 +109,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     zipCode.trim() !== '' &&
     address.trim() !== '' &&
     paymentMethod !== null &&
-    (paymentMethod !== 'card' || (cardNumber.trim() !== '' && expiry.trim() !== '' && cvc.trim() !== ''));
+    (paymentMethod !== 'card' || (cardNumber.trim() !== '' && expiry.trim() !== '' && cvc.trim() !== '')) &&
+    (paymentMethod !== 'transfer' || depositorName.trim() !== '');
 
   // Trigger modal launch
   const handleCheckoutClick = () => {
@@ -582,6 +584,62 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Conditional Bank Transfer inputs & info */}
+          {paymentMethod === 'transfer' && (
+            <div 
+              style={{
+                marginTop: '20px',
+                borderTop: '1px solid #f0f0f0',
+                paddingTop: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+              }}
+            >
+              {/* 1. 입금자명 입력 */}
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>입금자명</label>
+                <input 
+                  type="text" 
+                  className="checkout-input"
+                  value={depositorName}
+                  onChange={(e) => setDepositorName(e.target.value)}
+                  style={styles.input}
+                  placeholder="입금자명을 입력해주세요"
+                />
+              </div>
+
+              {/* 2. 입금 계좌 안내 & 3. 안내 문구 */}
+              <div style={{
+                backgroundColor: '#fafafa',
+                padding: '16px',
+                border: '1px solid #f0f0f0',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '9px', color: '#888888', fontFamily: 'var(--font-sans)', letterSpacing: '0.5px' }}>
+                    입금 계좌
+                  </span>
+                  <span style={{ fontSize: '13px', fontWeight: 600, color: '#000000', fontFamily: 'var(--font-sans)' }}>
+                    000123-456789 농협
+                  </span>
+                </div>
+
+                <p style={{
+                  fontSize: '11px',
+                  color: '#888888',
+                  fontFamily: 'var(--font-sans)',
+                  lineHeight: '1.4',
+                  margin: 0
+                }}>
+                  2시간 이내 미입금 시 주문이 자동으로 취소될 수 있습니다.
+                </p>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* 06 최종 결제 (Final Payment) */}
