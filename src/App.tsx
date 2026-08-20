@@ -60,38 +60,41 @@ function App() {
     if (tossPayRedirect === 'true') {
       setIsTossPaying(true);
 
+      // URL 파라미터로부터 결제 데이터 추출
+      const amount = Number(params.get('amount') || '0');
+      const recipient = params.get('recipient') || '홍길동';
+      const address = params.get('address') || '';
+      const orderName = params.get('orderName') || '디프티크 상품';
+      const orderCount = Number(params.get('orderCount') || '1');
+
+      if (!amount || amount <= 0) {
+        alert('올바르지 않은 결제 금액입니다.');
+        window.close();
+        return;
+      }
+
       // 1. 토스 결제 라이브러리 스크립트 동적 로드
       const script = document.createElement('script');
       script.src = 'https://js.tosspayments.com/v1/payment';
       script.async = true;
       script.onload = () => {
-        // 스크립트 로드 완료 후 즉각 결제창 발사
         try {
-          const cachedRecipient = localStorage.getItem('pending_order_recipient') || '홍길동';
-          const cachedCart = localStorage.getItem('pending_order_cart');
-
-          if (!cachedCart) {
-            alert('결제할 장바구니 정보가 소실되었습니다.');
-            window.close();
-            return;
-          }
-
-          const parsedCart = JSON.parse(cachedCart) as CartItemType[];
-          const subtotal = parsedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-          const totalPayment = subtotal; // 배송비 및 할인 0원 가정
-
           const tossPayments = (window as any).TossPayments('test_ck_vZnjEJeQVxPeEkJ25KyDVPmOoBN0');
           const orderId = `order_${Math.random().toString(36).substring(2, 11)}_${Date.now()}`;
-          const orderName = parsedCart.length > 0
-            ? `${parsedCart[0].name} ${parsedCart[0].volume}${parsedCart.length > 1 ? ` 외 ${parsedCart.length - 1}건` : ''}`
-            : '디프티크 향수';
 
+          // 토스 페이먼츠 카드 결제창 활성화
           tossPayments.requestPayment('카드', {
-            amount: totalPayment,
+            amount: amount,
             orderId: orderId,
             orderName: orderName,
-            customerName: cachedRecipient,
-            successUrl: `${window.location.origin}/?tossSuccess=true`,
+            customerName: recipient,
+            // 리다이렉트되어 돌아올 때 데이터를 유실하지 않도록 successUrl에 관련 메타데이터 파라미터를 그대로 매달아 전송
+            successUrl: `${window.location.origin}/?tossSuccess=true` +
+              `&amount=${amount}` +
+              `&recipient=${encodeURIComponent(recipient)}` +
+              `&address=${encodeURIComponent(address)}` +
+              `&orderName=${encodeURIComponent(orderName)}` +
+              `&orderCount=${orderCount}`,
             failUrl: `${window.location.origin}/?tossFail=true`,
           });
         } catch (err: any) {
@@ -103,7 +106,7 @@ function App() {
     }
   }, []);
 
-  // 토스 페이먼츠 결제 승인 콜백 및 백업 정보 복원 감지
+  // 토스 페이먼츠 결제 승인 콜백 및 백업 정보 복원 감지 (URL 파라미터 기반)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const tossSuccess = params.get('tossSuccess');
@@ -111,49 +114,34 @@ function App() {
     const paymentKey = params.get('paymentKey');
 
     if (tossSuccess && paymentKey) {
-      // 1. 배송 정보 복원
-      const cachedRecipient = localStorage.getItem('pending_order_recipient') || '홍길동';
-      const cachedAddress = localStorage.getItem('pending_order_address') || '서울시 도산대로 178';
-      const cachedCart = localStorage.getItem('pending_order_cart');
+      try {
+        // 1. URL 파라미터로부터 직접 데이터 복구 (로컬스토리지 의존 제거)
+        const recipientNameVal = params.get('recipient') || '홍길동';
+        const shippingAddressVal = params.get('address') || '서울시 도산대로 178';
+        const orderNameVal = params.get('orderName') || '디프티크 향수';
+        const orderCountVal = Number(params.get('orderCount') || '1');
+        const amountVal = Number(params.get('amount') || '0');
 
-      if (cachedCart) {
-        try {
-          const parsedCart = JSON.parse(cachedCart) as CartItemType[];
-          // 장바구니 품목을 임시 복원하여 결제 성공 데이터 합산 계산이 되도록 합니다.
-          setCartItems(parsedCart);
-          
-          // 2. 결제 완료 데이터 적용
-          setRecipientName(cachedRecipient);
-          setShippingAddress(cachedAddress);
-          
-          const subtotal = parsedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-          setOrderTotal(subtotal);
-          
-          const totalQty = parsedCart.reduce((sum, item) => sum + item.quantity, 0);
-          setOrderCount(totalQty);
-          
-          if (parsedCart.length > 0) {
-            const firstItem = parsedCart[0];
-            const summaryText = parsedCart.length === 1
-              ? `${firstItem.name} ${firstItem.volume}`
-              : `${firstItem.name} ${firstItem.volume} 외 ${parsedCart.length - 1}건`;
-            setOrderSummaryText(summaryText);
-          }
-          
-          // 3. 결제 완료 완료 토스트 및 페이지 이동 후 장바구니 비우기
-          setShowSuccessToast(true);
-          setTimeout(() => {
-            setShowSuccessToast(false);
-            setCurrentPage('complete');
-            setCartItems([]); // 결제 완료되었으므로 장바구니 비움
-          }, 2000);
+        // 2. 결제 완료 데이터 적용
+        setRecipientName(recipientNameVal);
+        setShippingAddress(shippingAddressVal);
+        setOrderTotal(amountVal);
+        setOrderCount(orderCountVal);
+        setOrderSummaryText(orderNameVal);
+        
+        // 3. 결제 완료 토스트 출력 및 페이지 이동 후 장바구니 비우기
+        setShowSuccessToast(true);
+        setTimeout(() => {
+          setShowSuccessToast(false);
+          setCurrentPage('complete');
+          setCartItems([]); // 결제 완료되었으므로 장바구니 비움
+        }, 2000);
 
-        } catch (e) {
-          console.error('Failed to restore cached cart:', e);
-        }
+      } catch (e) {
+        console.error('Failed to restore order parameters from URL:', e);
       }
 
-      // 4. 로컬스토리지 임시 데이터 정리
+      // 4. 안전장치용 로컬스토리지 임시 데이터 정리
       localStorage.removeItem('pending_order_recipient');
       localStorage.removeItem('pending_order_address');
       localStorage.removeItem('pending_order_cart');

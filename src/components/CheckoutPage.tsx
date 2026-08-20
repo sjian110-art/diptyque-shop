@@ -122,16 +122,23 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
     setShowConfirmModal(false);
   };
 
-  // 토스 페이먼츠 결제창 실행 및 백업 핸들러 (새 탭 전환 방식)
+  // 토스 페이먼츠 결제창 실행 및 백업 핸들러 (새 탭 전환 방식 - URL 전송 방식)
   const handleTossPayment = () => {
     try {
-      // 1. 새 탭(전체 화면)으로 데이터를 공유하기 위한 로컬스토리지 백업
-      localStorage.setItem('pending_order_recipient', recipient);
-      localStorage.setItem('pending_order_address', `${address} ${detailAddress}`.trim());
-      localStorage.setItem('pending_order_cart', JSON.stringify(cartItems));
+      const orderName = cartItems.length > 0
+        ? `${cartItems[0].name} ${cartItems[0].volume}${cartItems.length > 1 ? ` 외 ${cartItems.length - 1}건` : ''}`
+        : '디프티크 향수';
+      
+      const orderCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-      // 2. 브라우저 전체 화면(새 탭)에서 결제 페이지 구동
-      const redirectUrl = `${window.location.origin}/?tossPayRedirect=true`;
+      // 브라우저 전체 화면(새 탭)에서 결제 페이지 구동 시, 제3자 Iframe 보안 저장소 분리를 우회하기 위해 URL 파라미터로 결제정보 직렬화
+      const redirectUrl = `${window.location.origin}/?tossPayRedirect=true` +
+        `&amount=${totalPayment}` +
+        `&recipient=${encodeURIComponent(recipient)}` +
+        `&address=${encodeURIComponent(`${address} ${detailAddress}`.trim())}` +
+        `&orderName=${encodeURIComponent(orderName)}` +
+        `&orderCount=${orderCount}`;
+      
       window.open(redirectUrl, '_blank');
       
       // 모달 정리
