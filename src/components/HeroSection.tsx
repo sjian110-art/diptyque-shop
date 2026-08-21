@@ -22,12 +22,14 @@ const SLIDES: Slide[] = [
   },
   {
     bg: Home_Hero2_Background,
+    overlayImg: App_Home_Banner1_Overlay_New,
     subTitle: '오 드 뚜왈렛',
     title: '가볍고 경쾌한 터치',
     linkText: '자세히 보기',
   },
   {
     bg: Home_Hero3_Background,
+    overlayImg: App_Home_Banner1_Overlay_New,
     subTitle: '오 드 퍼퓸',
     title: '깊고 풍부한 잔향',
     linkText: '자세히 보기',
