@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ArrowRight, ChevronRight, LogOut } from 'lucide-react';
+import { ArrowRight, ChevronRight, LogOut, Clock, Package, Truck, CheckCircle } from 'lucide-react';
 import { Header } from './Header';
 import { BottomNav } from './BottomNav';
 import { auth } from '../firebase';
@@ -30,13 +30,6 @@ interface MyPageProps {
 const DUMMY_ORDERS = [
   { id: 'ORD-001', status: 'completed' as const, name: 'Do Son 75ML', date: '2026.08.01' },
 ];
-
-const ORDER_STATUS_ICONS = {
-  pending: '/assets_1/Pending.png',
-  preparing: '/assets_1/Preparing.png',
-  shipping: '/assets_1/Shipping.png',
-  completed: '/assets_1/Completed.png',
-};
 
 const MENU_ITEMS = [
   { label: 'ORDER HISTORY', badge: null },
@@ -121,17 +114,13 @@ export const MyPage: React.FC<MyPageProps> = ({
           align-items: center;
           justify-content: center;
         }
-        .status-icon-wrap img {
-          width: 28px;
-          height: 28px;
-          object-fit: contain;
-          filter: brightness(0) invert(1) drop-shadow(0.15px 0px 0px #ffffff) drop-shadow(-0.15px 0px 0px #ffffff) drop-shadow(0px 0.15px 0px #ffffff) drop-shadow(0px -0.15px 0px #ffffff);
-          opacity: 0.85; /* Increased opacity for equal visual weight and brightness */
+        .status-icon-wrap svg {
+          color: #ffffff;
+          opacity: 0.85; /* Same visual weight and brightness */
           transition: opacity 0.2s ease;
         }
-        .status-icon-wrap.active img {
+        .status-icon-wrap.active svg {
           opacity: 1;
-          filter: brightness(0) invert(1) drop-shadow(0.15px 0px 0px #ffffff) drop-shadow(-0.15px 0px 0px #ffffff) drop-shadow(0px 0.15px 0px #ffffff) drop-shadow(0px -0.15px 0px #ffffff);
         }
         .compare-slot {
           flex: 1;
@@ -310,10 +299,10 @@ export const MyPage: React.FC<MyPageProps> = ({
         {(['pending', 'preparing', 'shipping', 'completed'] as const).map((status) => (
           <div key={status} className="order-status-step">
             <div className={`status-icon-wrap ${DUMMY_ORDERS[0]?.status === status ? 'active' : ''}`}>
-              <img
-                src={ORDER_STATUS_ICONS[status]}
-                alt={status}
-              />
+              {status === 'pending' && <Clock size={24} strokeWidth={1.6} />}
+              {status === 'preparing' && <Package size={24} strokeWidth={1.6} />}
+              {status === 'shipping' && <Truck size={24} strokeWidth={1.6} />}
+              {status === 'completed' && <CheckCircle size={24} strokeWidth={1.6} />}
             </div>
             <span style={styles.statusLabel}>{status.toUpperCase()}</span>
           </div>
