@@ -10,6 +10,12 @@ img, svg, path, [role="button"],
   cursor: none !important;
 }
 
+/* Remove default browser tap highlight flashing on buttons and inputs */
+button, input, select, textarea, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent !important;
+  outline: none !important;
+}
+
 :root {
   --bg-color: #000000;
   --text-color: #ffffff;

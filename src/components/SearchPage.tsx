@@ -176,6 +176,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               style={styles.searchInput}
             />
             <button 
+              type="button"
               style={styles.searchIconBtn}
               onClick={handleSearchSubmit}
             >
@@ -365,6 +366,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     width: '100%',
     borderBottom: '1px solid #d2d2d2',
+    willChange: 'transform',
   },
   searchInput: {
     width: '100%',
