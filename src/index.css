@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700;800;900&display=swap');
 
+/* Force hide default browser mouse cursor everywhere on all elements inside iframe */
+*, *::before, *::after, 
+html, body, #root, iframe,
+a, button, input, textarea, select, 
+img, svg, path, [role="button"], 
+[style*="cursor: pointer"], [style*="cursor:pointer"],
+[style*="cursor: default"], [style*="cursor:default"] {
+  cursor: none !important;
+}
+
 :root {
   --bg-color: #000000;
   --text-color: #ffffff;
