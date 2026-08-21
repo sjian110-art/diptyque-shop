@@ -124,13 +124,13 @@ export const MyPage: React.FC<MyPageProps> = ({
           width: 28px;
           height: 28px;
           object-fit: contain;
-          filter: brightness(0) invert(1) drop-shadow(0.3px 0px 0px #ffffff) drop-shadow(-0.3px 0px 0px #ffffff) drop-shadow(0px 0.3px 0px #ffffff) drop-shadow(0px -0.3px 0px #ffffff);
+          filter: brightness(0) invert(1) drop-shadow(0.15px 0px 0px #ffffff) drop-shadow(-0.15px 0px 0px #ffffff) drop-shadow(0px 0.15px 0px #ffffff) drop-shadow(0px -0.15px 0px #ffffff);
           opacity: 0.85; /* Increased opacity for equal visual weight and brightness */
           transition: opacity 0.2s ease;
         }
         .status-icon-wrap.active img {
           opacity: 1;
-          filter: brightness(0) invert(1) drop-shadow(0.3px 0px 0px #ffffff) drop-shadow(-0.3px 0px 0px #ffffff) drop-shadow(0px 0.3px 0px #ffffff) drop-shadow(0px -0.3px 0px #ffffff);
+          filter: brightness(0) invert(1) drop-shadow(0.15px 0px 0px #ffffff) drop-shadow(-0.15px 0px 0px #ffffff) drop-shadow(0px 0.15px 0px #ffffff) drop-shadow(0px -0.15px 0px #ffffff);
         }
         .compare-slot {
           flex: 1;
