@@ -336,13 +336,16 @@ function App() {
   if (currentPage === 'mypage') {
     return (
       <>
+        <Header
+          onOpenCart={() => setCartDrawerOpen(true)}
+          cartCount={totalCartCount}
+          onLogoClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+        />
         <MyPage
           currentUser={currentUser}
           kakaoUser={kakaoUser}
           cartItems={cartItems}
-          cartCount={totalCartCount}
           compareList={compareList}
-          onOpenCart={() => setCartDrawerOpen(true)}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onNavigateDetail={() => { setCurrentPage('detail'); window.scrollTo({ top: 0, behavior: 'instant' }); }}
           onLogout={async () => {

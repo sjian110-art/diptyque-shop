@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { ArrowRight, ChevronRight, LogOut, Clock, Package, Truck, CheckCircle } from 'lucide-react';
-import { Header } from './Header';
 import { BottomNav } from './BottomNav';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
@@ -19,9 +18,7 @@ interface MyPageProps {
   currentUser: User | null;
   kakaoUser?: KakaoUserProfile | null;
   cartItems: CartItemType[];
-  cartCount: number;
   compareList: CompareItem[];
-  onOpenCart: () => void;
   onNavigateHome: () => void;
   onNavigateDetail: () => void;
   onLogout: () => void;
@@ -45,9 +42,7 @@ const FOOTER_LINKS = ['SUSTAINABILITY', 'SHIPPING', 'CONTACT', 'BOUTIQUES'];
 export const MyPage: React.FC<MyPageProps> = ({
   currentUser,
   kakaoUser,
-  cartCount,
   compareList,
-  onOpenCart,
   onNavigateHome,
   onNavigateDetail,
   onLogout,
@@ -199,15 +194,6 @@ export const MyPage: React.FC<MyPageProps> = ({
           color: #EAEAEA !important;
         }
       `}</style>
-
-      {/* Header */}
-      <div style={{ position: 'relative', height: '64px', width: '100%', backgroundColor: '#000000', flexShrink: 0 }}>
-        <Header
-          onOpenCart={onOpenCart}
-          cartCount={cartCount}
-          onLogoClick={onNavigateHome}
-        />
-      </div>
 
       {/* ─── Profile Section ─── */}
       <section style={styles.profileSection}>
@@ -365,6 +351,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   profileSection: {
     padding: '28px 24px 24px',
+    paddingTop: '92px', // 64px fixed header + 28px original top spacing
     backgroundColor: '#000000',
   },
   myDiptyqueLabel: {
