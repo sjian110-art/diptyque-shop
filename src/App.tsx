@@ -39,6 +39,32 @@ function App() {
   // Selected scent parameter passed to recommendation result page
   const [selectedScent, setSelectedScent] = useState('전체');
 
+  // Forward mouse events to the parent window for the custom cursor effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      window.parent.postMessage({
+        type: 'IFRAME_MOUSEMOVE',
+        clientX: e.clientX,
+        clientY: e.clientY
+      }, '*');
+    };
+
+    const handleMouseClick = (e: MouseEvent) => {
+      window.parent.postMessage({
+        type: 'IFRAME_CLICK',
+        clientX: e.clientX,
+        clientY: e.clientY
+      }, '*');
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('click', handleMouseClick, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('click', handleMouseClick);
+    };
+  }, []);
+
   // Compare list shared across product detail & mypage
   const [compareList, setCompareList] = useState<CompareItem[]>([]);
 
