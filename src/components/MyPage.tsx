@@ -124,11 +124,13 @@ export const MyPage: React.FC<MyPageProps> = ({
           width: 28px;
           height: 28px;
           object-fit: contain;
-          filter: brightness(0) invert(1);
-          opacity: 0.4;
+          filter: brightness(0) invert(1) drop-shadow(0.3px 0px 0px #ffffff) drop-shadow(-0.3px 0px 0px #ffffff) drop-shadow(0px 0.3px 0px #ffffff) drop-shadow(0px -0.3px 0px #ffffff);
+          opacity: 0.85; /* Increased opacity for equal visual weight and brightness */
+          transition: opacity 0.2s ease;
         }
         .status-icon-wrap.active img {
           opacity: 1;
+          filter: brightness(0) invert(1) drop-shadow(0.3px 0px 0px #ffffff) drop-shadow(-0.3px 0px 0px #ffffff) drop-shadow(0px 0.3px 0px #ffffff) drop-shadow(0px -0.3px 0px #ffffff);
         }
         .compare-slot {
           flex: 1;
@@ -141,7 +143,7 @@ export const MyPage: React.FC<MyPageProps> = ({
           width: 80px;
           height: 80px;
           border-radius: 50%;
-          border: 1.5px solid rgba(255, 255, 255, 0.25);
+          border: 2.2px solid rgba(255, 255, 255, 0.65); /* Thicker border and higher opacity */
           display: flex;
           align-items: center;
           justify-content: center;
@@ -155,8 +157,8 @@ export const MyPage: React.FC<MyPageProps> = ({
         }
         .compare-question {
           font-size: 32px;
-          color: rgba(255, 255, 255, 0.6);
-          font-weight: 300;
+          color: rgba(255, 255, 255, 0.9); /* Brighter question mark */
+          font-weight: 500; /* Thicker font weight */
           font-family: var(--font-serif);
         }
         .compare-action-btn {
