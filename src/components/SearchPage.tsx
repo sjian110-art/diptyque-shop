@@ -19,6 +19,7 @@ interface SearchPageProps {
   onNavigateDetail: (productId: string) => void;
   onNavigateRecommend: (selectedScent: string) => void;
   onMenuClick?: () => void;
+  sideMenuOpen?: boolean;
 }
 
 export const SearchPage: React.FC<SearchPageProps> = ({
@@ -29,6 +30,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   onNavigateDetail,
   onNavigateRecommend,
   onMenuClick,
+  sideMenuOpen = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedScentPill, setSelectedScentPill] = useState<string | null>(null);
@@ -159,12 +161,14 @@ export const SearchPage: React.FC<SearchPageProps> = ({
 
   return (
     <>
-      <Header 
-        onOpenCart={onOpenCart} 
-        cartCount={cartCount} 
-        onLogoClick={onNavigateHome} 
-        onMenuClick={onMenuClick}
-      />
+      {!sideMenuOpen && (
+        <Header 
+          onOpenCart={onOpenCart} 
+          cartCount={cartCount} 
+          onLogoClick={onNavigateHome} 
+          onMenuClick={onMenuClick}
+        />
+      )}
 
       <div style={styles.scrollBody}>
         {/* Search Bar Input Container */}

@@ -10,6 +10,7 @@ interface OrderCompletePageProps {
   onContinueShopping: () => void;
   onSearchClick?: () => void;
   onMenuClick?: () => void;
+  sideMenuOpen?: boolean;
 }
 
 export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
@@ -20,6 +21,7 @@ export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
   onContinueShopping,
   onSearchClick,
   onMenuClick,
+  sideMenuOpen = false,
 }) => {
   const formatPrice = (value: number) => {
     return `₩ ${value.toLocaleString()}`;
@@ -52,7 +54,9 @@ export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
         }
 
       `}</style>
-      <Header onLogoClick={onContinueShopping} showBackButton={false} onSearchClick={onSearchClick} onMenuClick={onMenuClick} />
+      {!sideMenuOpen && (
+        <Header onLogoClick={onContinueShopping} showBackButton={false} onSearchClick={onSearchClick} onMenuClick={onMenuClick} />
+      )}
 
       {/* Complete info panel */}
       <main style={styles.main}>

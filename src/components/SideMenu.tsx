@@ -69,7 +69,21 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
               style={styles.mainMenuItem}
               onClick={(e) => {
                 e.preventDefault();
-                // Click handlers not wired yet as per prompt
+                const target = e.currentTarget;
+                // Bouncy horizontal spring transition
+                target.animate(
+                  [
+                    { transform: 'translateX(0)',     offset: 0 },
+                    { transform: 'translateX(14px)',  offset: 0.35 },
+                    { transform: 'translateX(-3px)',  offset: 0.7 },
+                    { transform: 'translateX(0)',     offset: 1 },
+                  ],
+                  {
+                    duration: 380,
+                    easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+                    fill: 'none',
+                  }
+                );
               }}
             >
               {item}
@@ -86,6 +100,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
             <a 
               key={item} 
               href="#link"
+              className="side-menu-sub-item"
               style={styles.subMenuItem}
               onClick={(e) => {
                 e.preventDefault();
@@ -105,6 +120,18 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
       </div>
+
+      {/* CSS stylesheet for hover and active transitions on sub items */}
+      <style>{`
+        .side-menu-sub-item {
+          color: #cccccc !important;
+          transition: color 180ms ease !important;
+        }
+        .side-menu-sub-item:hover,
+        .side-menu-sub-item:active {
+          color: #ffffff !important;
+        }
+      `}</style>
     </div>
   );
 };

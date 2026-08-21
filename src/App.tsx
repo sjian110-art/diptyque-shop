@@ -372,13 +372,15 @@ function App() {
   if (currentPage === 'mypage') {
     return (
       <>
-        <Header
-          onOpenCart={() => setCartDrawerOpen(true)}
-          cartCount={totalCartCount}
-          onLogoClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
-          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
-          onMenuClick={() => setSideMenuOpen(true)}
-        />
+        {!sideMenuOpen && (
+          <Header
+            onOpenCart={() => setCartDrawerOpen(true)}
+            cartCount={totalCartCount}
+            onLogoClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+            onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+            onMenuClick={() => setSideMenuOpen(true)}
+          />
+        )}
         <MyPage
           currentUser={currentUser}
           kakaoUser={kakaoUser}
@@ -475,6 +477,7 @@ function App() {
           currentUser={currentUser}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onMenuClick={() => setSideMenuOpen(true)}
+          sideMenuOpen={sideMenuOpen}
         />
         <CartDrawer 
           isOpen={cartDrawerOpen}
@@ -510,6 +513,7 @@ function App() {
           onContinueShopping={handleContinueShopping}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onMenuClick={() => setSideMenuOpen(true)}
+          sideMenuOpen={sideMenuOpen}
         />
         <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
       </>
@@ -539,6 +543,7 @@ function App() {
             window.scrollTo(0, 0);
           }}
           onMenuClick={() => setSideMenuOpen(true)}
+          sideMenuOpen={sideMenuOpen}
         />
         <CartDrawer
           isOpen={cartDrawerOpen}
@@ -595,19 +600,21 @@ function App() {
   // Render Standard Home Page
   return (
     <>
-      <Header 
-        onOpenCart={() => setCartDrawerOpen(true)} 
-        cartCount={totalCartCount} 
-        onLogoClick={() => {
-          setCurrentPage('home');
-          window.scrollTo(0, 0);
-        }} 
-        onSearchClick={() => {
-          setCurrentPage('search');
-          window.scrollTo(0, 0);
-        }} 
-        onMenuClick={() => setSideMenuOpen(true)}
-      />
+      {!sideMenuOpen && (
+        <Header 
+          onOpenCart={() => setCartDrawerOpen(true)} 
+          cartCount={totalCartCount} 
+          onLogoClick={() => {
+            setCurrentPage('home');
+            window.scrollTo(0, 0);
+          }} 
+          onSearchClick={() => {
+            setCurrentPage('search');
+            window.scrollTo(0, 0);
+          }} 
+          onMenuClick={() => setSideMenuOpen(true)}
+        />
+      )}
       <main style={styles.main}>
         <HeroSection />
         <CategorySection />
