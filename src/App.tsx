@@ -359,6 +359,7 @@ function App() {
           setCurrentPage('mypage');
         }}
         onNavigateMyPage={() => setCurrentPage('mypage')}
+        onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
       />
     );
   }
@@ -371,6 +372,7 @@ function App() {
           onOpenCart={() => setCartDrawerOpen(true)}
           cartCount={totalCartCount}
           onLogoClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
         />
         <MyPage
           currentUser={currentUser}
@@ -412,6 +414,7 @@ function App() {
           cartCount={totalCartCount}
           compareList={compareList}
           onToggleCompare={handleToggleCompare}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
         />
         <CartDrawer 
           isOpen={cartDrawerOpen}
@@ -464,6 +467,7 @@ function App() {
           cartCount={totalCartCount}
           onPaymentSuccess={handlePaymentSuccess}
           currentUser={currentUser}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
         />
         <CartDrawer 
           isOpen={cartDrawerOpen}
@@ -495,6 +499,7 @@ function App() {
         itemCount={orderCount}
         itemSummaryText={orderSummaryText}
         onContinueShopping={handleContinueShopping}
+        onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
       />
     );
   }
@@ -556,6 +561,7 @@ function App() {
               console.log(`Product clicked: ${id}`);
             }
           }}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
         />
         <CartDrawer
           isOpen={cartDrawerOpen}
@@ -580,6 +586,10 @@ function App() {
         cartCount={totalCartCount} 
         onLogoClick={() => {
           setCurrentPage('home');
+          window.scrollTo(0, 0);
+        }} 
+        onSearchClick={() => {
+          setCurrentPage('search');
           window.scrollTo(0, 0);
         }} 
       />

@@ -8,6 +8,7 @@ interface HeaderProps {
   showBackButton?: boolean;
   onBackClick?: () => void;
   isCartBouncing?: boolean;
+  onSearchClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   showBackButton = false,
   onBackClick,
   isCartBouncing = false,
+  onSearchClick,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -106,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Header Icons */}
       <div style={styles.rightIcons}>
-        <button style={styles.iconButton} aria-label="Search" onClick={() => console.log('Search clicked')}>
+        <button style={styles.iconButton} aria-label="Search" onClick={onSearchClick || (() => console.log('Search clicked'))}>
           <img 
             src="/assets_1/Nav_search.png" 
             alt="Search" 

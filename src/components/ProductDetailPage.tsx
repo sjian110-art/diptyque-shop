@@ -10,6 +10,7 @@ interface ProductDetailPageProps {
   cartCount: number;
   compareList?: CompareItem[];
   onToggleCompare?: (item: CompareItem) => void;
+  onSearchClick?: () => void;
 }
 
 const ACCORDION_DATA = [
@@ -80,6 +81,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   cartCount,
   compareList = [],
   onToggleCompare,
+  onSearchClick,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedVolume, setSelectedVolume] = useState('75ML');
@@ -339,6 +341,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
         onOpenCart={onOpenCart}
         cartCount={cartCount}
         isCartBouncing={isBouncing}
+        onSearchClick={onSearchClick}
       />
 
       {/* Scrollable Main body */}

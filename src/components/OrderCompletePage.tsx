@@ -8,6 +8,7 @@ interface OrderCompletePageProps {
   itemCount?: number;
   itemSummaryText: string;
   onContinueShopping: () => void;
+  onSearchClick?: () => void;
 }
 
 export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
@@ -16,6 +17,7 @@ export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
   totalAmount,
   itemSummaryText,
   onContinueShopping,
+  onSearchClick,
 }) => {
   const formatPrice = (value: number) => {
     return `₩ ${value.toLocaleString()}`;
@@ -48,7 +50,7 @@ export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
         }
 
       `}</style>
-      <Header onLogoClick={onContinueShopping} showBackButton={false} />
+      <Header onLogoClick={onContinueShopping} showBackButton={false} onSearchClick={onSearchClick} />
 
       {/* Complete info panel */}
       <main style={styles.main}>

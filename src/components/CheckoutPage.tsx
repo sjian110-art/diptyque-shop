@@ -13,6 +13,7 @@ interface CheckoutPageProps {
   cartCount: number;
   onPaymentSuccess: (recipient: string, address: string) => void;
   currentUser: User | null;
+  onSearchClick?: () => void;
 }
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = ({
@@ -22,6 +23,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   cartCount,
   onPaymentSuccess,
   currentUser,
+  onSearchClick,
 }) => {
   // TS6133 미사용 변수 컴파일 에러 방지 우회용 더미
   if (onPaymentSuccess && false) {
@@ -281,7 +283,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }
       `}</style>
 
-      <Header onOpenCart={onOpenCart} cartCount={cartCount} onLogoClick={onBack} />
+      <Header onOpenCart={onOpenCart} cartCount={cartCount} onLogoClick={onBack} onSearchClick={onSearchClick} />
 
       {/* Main Form Scroll Container */}
       <div style={styles.scrollBody}>

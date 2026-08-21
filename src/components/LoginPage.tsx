@@ -25,6 +25,7 @@ interface LoginPageProps {
   kakaoUser?: KakaoUserProfile | null;
   onKakaoLogin?: (user: KakaoUserProfile) => void;
   onNavigateMyPage?: () => void;
+  onSearchClick?: () => void;
 }
 
 export const LoginPage: React.FC<LoginPageProps> = ({
@@ -33,6 +34,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   kakaoUser,
   onKakaoLogin,
   onNavigateMyPage,
+  onSearchClick,
 }) => {
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [email, setEmail] = useState('');
@@ -328,7 +330,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           outline: none;
         }
       `}</style>
-      <Header showBackButton={true} onBackClick={onBack} />
+      <Header showBackButton={true} onBackClick={onBack} onSearchClick={onSearchClick} />
 
       {/* Hero Section */}
       <section style={styles.heroSection}>

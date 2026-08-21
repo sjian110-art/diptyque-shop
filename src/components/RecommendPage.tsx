@@ -15,6 +15,7 @@ interface RecommendPageProps {
   onNavigateHome: () => void;
   onNavigateMyPage: () => void;
   onNavigateDetail: (productId: string) => void;
+  onSearchClick?: () => void;
 }
 
 export const RecommendPage: React.FC<RecommendPageProps> = ({
@@ -25,6 +26,7 @@ export const RecommendPage: React.FC<RecommendPageProps> = ({
   onNavigateHome,
   onNavigateMyPage,
   onNavigateDetail,
+  onSearchClick,
 }) => {
   // Silence TS6133 lint error by logging the parameter
   console.log(`Loading recommendations for mood/scent: ${selectedScent}`);
@@ -61,6 +63,7 @@ export const RecommendPage: React.FC<RecommendPageProps> = ({
         onBackClick={onBackToSearch}
         onOpenCart={onOpenCart}
         cartCount={cartCount}
+        onSearchClick={onSearchClick}
       />
 
       <div style={styles.scrollBody}>
