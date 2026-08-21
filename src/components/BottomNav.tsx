@@ -124,7 +124,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginTop: '-1px',
   },
   icon: {
-    filter: 'brightness(0) invert(1) drop-shadow(0.12px 0px 0px #ffffff) drop-shadow(-0.12px 0px 0px #ffffff) drop-shadow(0px 0.12px 0px #ffffff) drop-shadow(0px -0.12px 0px #ffffff)',
+    filter: 'brightness(0) invert(1)',
     transition: 'opacity 0.2s ease',
   },
   navText: {
