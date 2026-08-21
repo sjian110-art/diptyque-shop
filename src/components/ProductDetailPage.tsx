@@ -606,7 +606,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   imageCardContainer: {
     width: 'calc(100% - 32px)',
-    margin: '16px 16px 28px 16px',
+    margin: '12px 16px 20px 16px',
     aspectRatio: '1 / 1',
     backgroundColor: '#F4F0EB', // Cream background card
     borderRadius: '12px',
@@ -614,7 +614,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '40px',
+    padding: '12px', // Reduced from 40px to allow image to expand by ~22% natively
   },
   productImage: {
     maxHeight: '100%',
