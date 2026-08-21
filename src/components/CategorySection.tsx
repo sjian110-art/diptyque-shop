@@ -184,8 +184,8 @@ const styles: { [key: string]: React.CSSProperties } = {
   textContainer: {
     fontFamily: 'var(--font-serif)',
     fontSize: '22px',
-    fontWeight: 400,
-    letterSpacing: '1px',
+    fontWeight: 700,
+    letterSpacing: '-0.02em',
     position: 'relative',
     display: 'inline-block',
     // Clip ripple strictly within text bounds

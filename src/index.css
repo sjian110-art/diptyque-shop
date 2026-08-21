@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
   --bg-color: #000000;
@@ -8,8 +8,8 @@
   --cream-text: #000000;
   --border-color: rgba(255, 255, 255, 0.15);
   --border-light: rgba(255, 255, 255, 0.08);
-  --font-serif: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
-  --font-sans: 'Inter', 'Noto Serif KR', system-ui, -apple-system, sans-serif;
+  --font-serif: 'EB Garamond', 'Noto Serif KR', Georgia, serif;
+  --font-sans: 'EB Garamond', 'Noto Serif KR', system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -143,7 +143,7 @@ h3,
 h4, 
 h5, 
 h6 {
-  font-family: 'Inter', 'Noto Serif KR', system-ui, -apple-system, sans-serif !important;
+  font-family: 'EB Garamond', 'Noto Serif KR', system-ui, -apple-system, sans-serif !important;
 }
 
 /* 2. 영문 브랜드명 및 클래식 세리프 무드를 고수해야 할 타이틀 영역에만 제한적 예외 적용 */
@@ -155,5 +155,13 @@ h6 {
 .modalTitle,
 [style*="fontFamily: 'Playfair Display'"],
 [style*="fontFamily: var(--font-serif)"] {
-  font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif !important;
+  font-family: 'EB Garamond', 'Noto Serif KR', Georgia, serif !important;
+}
+
+/* 3. DIPTYQUE 로고 전용 스타일링 (EB Garamond, 자간 좁힘, Regular~Medium 웨이트) */
+.header-logo-btn span,
+footer div:first-child span {
+  font-family: 'EB Garamond', 'Noto Serif KR', Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 1.8px !important;
 }

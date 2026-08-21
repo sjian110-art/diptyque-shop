@@ -630,11 +630,11 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   productName: {
     fontFamily: 'var(--font-serif)',
-    fontSize: '36px',
-    fontWeight: 400,
+    fontSize: '38px',
+    fontWeight: 600,
     color: '#000000',
     marginBottom: '16px',
-    letterSpacing: '0.5px',
+    letterSpacing: '-0.01em',
   },
   productDesc: {
     fontFamily: 'var(--font-serif)',
