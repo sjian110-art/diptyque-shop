@@ -21,6 +21,7 @@ interface MyPageProps {
   compareList: CompareItem[];
   onNavigateHome: () => void;
   onNavigateDetail: () => void;
+  onNavigateSearch: () => void;
   onLogout: () => void;
 }
 
@@ -45,6 +46,7 @@ export const MyPage: React.FC<MyPageProps> = ({
   compareList,
   onNavigateHome,
   onNavigateDetail,
+  onNavigateSearch,
   onLogout,
 }) => {
   const handleLogout = async () => {
@@ -334,6 +336,7 @@ export const MyPage: React.FC<MyPageProps> = ({
       {/* Bottom Nav */}
       <BottomNav
         onHomeClick={onNavigateHome}
+        onSearchClick={onNavigateSearch}
         activeTab="my"
       />
     </>

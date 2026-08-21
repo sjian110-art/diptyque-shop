@@ -12,6 +12,8 @@ import { CheckoutPage } from './components/CheckoutPage';
 import { OrderCompletePage } from './components/OrderCompletePage';
 import { CartDrawer } from './components/CartDrawer';
 import { MyPage } from './components/MyPage';
+import { SearchPage } from './components/SearchPage';
+import { RecommendPage } from './components/RecommendPage';
 import type { CartItemType } from './components/CartDrawer';
 import type { CompareItem } from './components/MyPage';
 import { auth } from './firebase';
@@ -21,7 +23,7 @@ import { initKakao, getStoredKakaoUser, kakaoLogout } from './kakaoAuth';
 import type { KakaoUserProfile } from './kakaoAuth';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend'>('home');
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -32,7 +34,10 @@ function App() {
 
   // Navigation stack memory for returning to cart drawer on correct screen
   const [backToCart, setBackToCart] = useState(false);
-  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage'>('home');
+  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend'>('home');
+
+  // Selected scent parameter passed to recommendation result page
+  const [selectedScent, setSelectedScent] = useState('전체');
 
   // Compare list shared across product detail & mypage
   const [compareList, setCompareList] = useState<CompareItem[]>([]);
@@ -348,6 +353,7 @@ function App() {
           compareList={compareList}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onNavigateDetail={() => { setCurrentPage('detail'); window.scrollTo({ top: 0, behavior: 'instant' }); }}
+          onNavigateSearch={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onLogout={async () => {
             await kakaoLogout();
             setKakaoUser(null);
@@ -467,6 +473,79 @@ function App() {
     );
   }
 
+  // Render Search Page
+  if (currentPage === 'search') {
+    return (
+      <>
+        <SearchPage
+          onOpenCart={() => setCartDrawerOpen(true)}
+          cartCount={totalCartCount}
+          onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onNavigateMyPage={handleMyClick}
+          onNavigateDetail={(id) => {
+            if (id === 'doson') {
+              setCurrentPage('detail');
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            } else {
+              console.log(`Product clicked: ${id}`);
+            }
+          }}
+          onNavigateRecommend={(scent) => {
+            setSelectedScent(scent);
+            setCurrentPage('recommend');
+            window.scrollTo(0, 0);
+          }}
+        />
+        <CartDrawer
+          isOpen={cartDrawerOpen}
+          onClose={() => setCartDrawerOpen(false)}
+          cartItems={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onCheckoutClick={() => {
+            setCartDrawerOpen(false);
+            setCurrentPage('checkout');
+          }}
+          onProductClick={handleCartProductClick}
+        />
+      </>
+    );
+  }
+
+  // Render Recommend Result Page
+  if (currentPage === 'recommend') {
+    return (
+      <>
+        <RecommendPage
+          selectedScent={selectedScent}
+          onOpenCart={() => setCartDrawerOpen(true)}
+          cartCount={totalCartCount}
+          onBackToSearch={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onNavigateMyPage={handleMyClick}
+          onNavigateDetail={(id) => {
+            if (id === 'doson') {
+              setCurrentPage('detail');
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            } else {
+              console.log(`Product clicked: ${id}`);
+            }
+          }}
+        />
+        <CartDrawer
+          isOpen={cartDrawerOpen}
+          onClose={() => setCartDrawerOpen(false)}
+          cartItems={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onCheckoutClick={() => {
+            setCartDrawerOpen(false);
+            setCurrentPage('checkout');
+          }}
+          onProductClick={handleCartProductClick}
+        />
+      </>
+    );
+  }
+
   // Render Standard Home Page
   return (
     <>
@@ -496,6 +575,10 @@ function App() {
         onMyClick={handleMyClick}
         onHomeClick={() => {
           setCurrentPage('home');
+          window.scrollTo(0, 0);
+        }}
+        onSearchClick={() => {
+          setCurrentPage('search');
           window.scrollTo(0, 0);
         }}
         activeTab="home"

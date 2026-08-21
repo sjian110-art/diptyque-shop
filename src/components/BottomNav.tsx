@@ -3,10 +3,16 @@ import React from 'react';
 interface BottomNavProps {
   onMyClick?: () => void;
   onHomeClick?: () => void;
+  onSearchClick?: () => void;
   activeTab?: 'home' | 'shop' | 'search' | 'my';
 }
 
-export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, activeTab = 'home' }) => {
+export const BottomNav: React.FC<BottomNavProps> = ({
+  onMyClick,
+  onHomeClick,
+  onSearchClick,
+  activeTab = 'home',
+}) => {
   const getItemStyle = (tab: string) => ({
     ...styles.navItem,
     ...(activeTab === tab ? styles.activeNavItem : {}),
@@ -58,7 +64,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, ac
         style={getItemStyle('search')}
         onClick={(e) => {
           e.preventDefault();
-          console.log('Search tab clicked');
+          if (onSearchClick) onSearchClick();
         }}
       >
         <img
