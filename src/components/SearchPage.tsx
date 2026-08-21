@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Header } from './Header';
 import { BottomNav } from './BottomNav';
 
@@ -30,6 +31,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedScentPill, setSelectedScentPill] = useState<string | null>(null);
   const [selectedMemoryPill, setSelectedMemoryPill] = useState<string | null>(null);
+  const [showSearchAlert, setShowSearchAlert] = useState(false);
 
   const scentBtnRef = useRef<HTMLButtonElement | null>(null);
   const memoryBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -51,6 +53,19 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   const handleMemoryPillClick = (pill: string) => {
     setSelectedMemoryPill(selectedMemoryPill === pill ? null : pill);
     setSelectedScentPill(null); // Clear scent pill when picking a memory pill
+  };
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      setShowSearchAlert(true);
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearchSubmit();
+    }
   };
 
   const handleRecommendClick = (section: 'scent' | 'memory') => {
@@ -121,10 +136,14 @@ export const SearchPage: React.FC<SearchPageProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
               placeholder="향 이름 또는 분위기를 검색하세요"
               style={styles.searchInput}
             />
-            <button style={styles.searchIconBtn}>
+            <button 
+              style={styles.searchIconBtn}
+              onClick={handleSearchSubmit}
+            >
               <img src={Search_Icon} alt="Search" style={styles.searchIcon} />
             </button>
           </div>
@@ -240,13 +259,51 @@ export const SearchPage: React.FC<SearchPageProps> = ({
           </div>
         </section>
       </div>
-
       <BottomNav
         onHomeClick={onNavigateHome}
         onMyClick={onNavigateMyPage}
         onSearchClick={() => {}}
         activeTab="search"
       />
+
+      {/* CSS keyframes for search alert modal */}
+      <style>{`
+        @keyframes searchModalFadeInScale {
+          0% { opacity: 0; transform: scale(0.96); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+        .animate-search-modal {
+          animation: searchModalFadeInScale 220ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .search-modal-confirm-btn:hover {
+          opacity: 0.9;
+        }
+      `}</style>
+
+      {/* Search feature ready alert modal */}
+      {showSearchAlert && createPortal(
+        <>
+          {/* Backdrop Overlay */}
+          <div 
+            style={styles.modalOverlay} 
+            onClick={() => setShowSearchAlert(false)} 
+          />
+          
+          {/* Modal Panel Container */}
+          <div className="animate-search-modal" style={styles.modalPanel}>
+            <h3 style={styles.modalTitle}>검색 기능은 현재 준비 중입니다.</h3>
+            <p style={styles.modalSubtitle}>곧 더 편리한 검색 기능으로 찾아뵙겠습니다.</p>
+            <button 
+              className="search-modal-confirm-btn"
+              style={styles.modalConfirmBtn}
+              onClick={() => setShowSearchAlert(false)}
+            >
+              확인
+            </button>
+          </div>
+        </>,
+        document.body
+      )}
     </>
   );
 };
@@ -432,5 +489,60 @@ const styles: { [key: string]: React.CSSProperties } = {
     textAlign: 'center',
     letterSpacing: '0.3px',
     lineHeight: '1.2',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100vw',
+    height: '100vh',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backdropFilter: 'blur(1.5px)',
+    WebkitBackdropFilter: 'blur(1.5px)',
+    zIndex: 999999,
+  },
+  modalPanel: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    margin: 'auto',
+    width: 'calc(100% - 40px)',
+    maxWidth: '320px',
+    height: 'fit-content',
+    backgroundColor: '#ffffff',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.25)',
+    zIndex: 1000000,
+    padding: '24px',
+    boxSizing: 'border-box',
+    textAlign: 'center',
+  },
+  modalTitle: {
+    fontFamily: 'var(--font-serif)',
+    fontSize: '15px',
+    fontWeight: 500,
+    color: '#000000',
+    margin: '0 0 8px 0',
+  },
+  modalSubtitle: {
+    fontFamily: 'var(--font-sans)',
+    fontSize: '11px',
+    color: '#666666',
+    margin: '0 0 20px 0',
+    lineHeight: '1.4',
+  },
+  modalConfirmBtn: {
+    width: '100%',
+    height: '40px',
+    backgroundColor: '#000000',
+    color: '#ffffff',
+    border: 'none',
+    fontFamily: 'var(--font-sans)',
+    fontSize: '11px',
+    fontWeight: 500,
+    letterSpacing: '1px',
+    cursor: 'pointer',
+    transition: 'opacity 0.2s ease',
   },
 };
