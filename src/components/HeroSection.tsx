@@ -156,6 +156,12 @@ export const HeroSection: React.FC = () => {
                     objectFit: 'cover',
                     zIndex: 1,
                     pointerEvents: 'none',
+                    // Slide 2 has a visible hard edge at the bottom — apply a gradient mask
+                    // that fades the overlay out before it reaches the bottom edge
+                    ...(idx === 1 && {
+                      WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                      maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                    }),
                   }}
                 />
               )}
