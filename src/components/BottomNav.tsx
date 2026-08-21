@@ -16,7 +16,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, ac
     ...styles.icon,
     width: w,
     height: h,
-    opacity: activeTab === tab ? 1 : 0.5,
+    opacity: activeTab === tab ? 1 : 0.65,
   });
 
   return (
@@ -32,7 +32,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, ac
         <img
           src="/assets_1/Nav_home.png"
           alt="Home"
-          style={getIconStyle('home', '14px', '16px')}
+          style={getIconStyle('home', '16px', '18px')}
         />
         <span style={styles.navText}>HOME</span>
       </a>
@@ -48,7 +48,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, ac
         <img
           src="/assets_1/Nav_shop.png"
           alt="Shop"
-          style={getIconStyle('shop', '14px', '18px')}
+          style={getIconStyle('shop', '16px', '20px')}
         />
         <span style={styles.navText}>SHOP</span>
       </a>
@@ -64,7 +64,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, ac
         <img
           src="/assets_1/Nav_search.png"
           alt="Search"
-          style={getIconStyle('search', '17px', '17px')}
+          style={getIconStyle('search', '19.5px', '19.5px')}
         />
         <span style={styles.navText}>SEARCH</span>
       </a>
@@ -80,7 +80,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onMyClick, onHomeClick, ac
         <img
           src="/assets_1/Nav_my.png"
           alt="My"
-          style={getIconStyle('my', '14px', '14px')}
+          style={getIconStyle('my', '16px', '16px')}
         />
         <span style={styles.navText}>MY</span>
       </a>
@@ -112,7 +112,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#8e8e93',
+    color: '#a5a5ab',
     gap: '6px',
     position: 'relative',
     transition: 'color 0.2s ease',
@@ -124,12 +124,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginTop: '-1px',
   },
   icon: {
-    filter: 'brightness(0) invert(1)',
+    filter: 'brightness(0) invert(1) drop-shadow(0.12px 0px 0px #ffffff) drop-shadow(-0.12px 0px 0px #ffffff) drop-shadow(0px 0.12px 0px #ffffff) drop-shadow(0px -0.12px 0px #ffffff)',
     transition: 'opacity 0.2s ease',
   },
   navText: {
-    fontSize: '9px',
-    fontWeight: 500,
+    fontSize: '10px',
+    fontWeight: 600,
     letterSpacing: '1px',
   },
 };
