@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Header } from './Header';
 import { BottomNav } from './BottomNav';
 
@@ -31,6 +31,18 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   const [selectedScentPill, setSelectedScentPill] = useState<string | null>(null);
   const [selectedMemoryPill, setSelectedMemoryPill] = useState<string | null>(null);
 
+  const scentBtnRef = useRef<HTMLButtonElement | null>(null);
+  const memoryBtnRef = useRef<HTMLButtonElement | null>(null);
+  const shakeAnimRef = useRef<Animation | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (shakeAnimRef.current) {
+        shakeAnimRef.current.cancel();
+      }
+    };
+  }, []);
+
   const handleScentPillClick = (pill: string) => {
     setSelectedScentPill(selectedScentPill === pill ? null : pill);
     setSelectedMemoryPill(null); // Clear memory pill when picking a scent pill
@@ -41,8 +53,47 @@ export const SearchPage: React.FC<SearchPageProps> = ({
     setSelectedScentPill(null); // Clear scent pill when picking a memory pill
   };
 
-  const handleRecommendClick = () => {
-    const selected = selectedScentPill || selectedMemoryPill || '전체';
+  const handleRecommendClick = (section: 'scent' | 'memory') => {
+    const isScent = section === 'scent';
+    const selected = isScent ? selectedScentPill : selectedMemoryPill;
+
+    if (!selected) {
+      const btn = isScent ? scentBtnRef.current : memoryBtnRef.current;
+      if (btn) {
+        // Cancel active animations
+        if (shakeAnimRef.current) {
+          shakeAnimRef.current.cancel();
+          shakeAnimRef.current = null;
+        }
+
+        // Apply same shake keyframes from landing page
+        shakeAnimRef.current = btn.animate(
+          [
+            { transform: "translateX(0)",     offset: 0 },
+            { transform: "translateX(-12px)", offset: 0.11 },
+            { transform: "translateX(12px)",  offset: 0.22 },
+            { transform: "translateX(-10px)", offset: 0.33 },
+            { transform: "translateX(10px)",  offset: 0.44 },
+            { transform: "translateX(-8px)",  offset: 0.55 },
+            { transform: "translateX(8px)",   offset: 0.66 },
+            { transform: "translateX(-4px)",  offset: 0.77 },
+            { transform: "translateX(4px)",   offset: 0.88 },
+            { transform: "translateX(0)",     offset: 1 },
+          ],
+          {
+            duration: 600,
+            easing: "ease-in-out",
+            fill: "none",
+          }
+        );
+
+        shakeAnimRef.current.onfinish = () => {
+          shakeAnimRef.current = null;
+        };
+      }
+      return;
+    }
+
     onNavigateRecommend(selected);
   };
 
@@ -110,8 +161,9 @@ export const SearchPage: React.FC<SearchPageProps> = ({
           </div>
 
           <button 
+            ref={scentBtnRef}
             style={styles.submitBtn}
-            onClick={handleRecommendClick}
+            onClick={() => handleRecommendClick('scent')}
           >
             향 추천받기
           </button>
@@ -150,8 +202,9 @@ export const SearchPage: React.FC<SearchPageProps> = ({
           </div>
 
           <button 
+            ref={memoryBtnRef}
             style={styles.submitBtn}
-            onClick={handleRecommendClick}
+            onClick={() => handleRecommendClick('memory')}
           >
             향 추천받기
           </button>
