@@ -35,6 +35,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
 
   const scentBtnRef = useRef<HTMLButtonElement | null>(null);
   const memoryBtnRef = useRef<HTMLButtonElement | null>(null);
+  const searchInputWrapperRef = useRef<HTMLDivElement | null>(null);
   const shakeAnimRef = useRef<Animation | null>(null);
 
   useEffect(() => {
@@ -58,6 +59,40 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   const handleSearchSubmit = () => {
     if (searchQuery.trim()) {
       setShowSearchAlert(true);
+    } else {
+      const wrapper = searchInputWrapperRef.current;
+      if (wrapper) {
+        // Cancel active animations
+        if (shakeAnimRef.current) {
+          shakeAnimRef.current.cancel();
+          shakeAnimRef.current = null;
+        }
+
+        // Apply same shake keyframes from landing page
+        shakeAnimRef.current = wrapper.animate(
+          [
+            { transform: "translateX(0)",     offset: 0 },
+            { transform: "translateX(-12px)", offset: 0.11 },
+            { transform: "translateX(12px)",  offset: 0.22 },
+            { transform: "translateX(-10px)", offset: 0.33 },
+            { transform: "translateX(10px)",  offset: 0.44 },
+            { transform: "translateX(-8px)",  offset: 0.55 },
+            { transform: "translateX(8px)",   offset: 0.66 },
+            { transform: "translateX(-4px)",  offset: 0.77 },
+            { transform: "translateX(4px)",   offset: 0.88 },
+            { transform: "translateX(0)",     offset: 1 },
+          ],
+          {
+            duration: 600,
+            easing: "ease-in-out",
+            fill: "none",
+          }
+        );
+
+        shakeAnimRef.current.onfinish = () => {
+          shakeAnimRef.current = null;
+        };
+      }
     }
   };
 
@@ -131,7 +166,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
       <div style={styles.scrollBody}>
         {/* Search Bar Input Container */}
         <div style={styles.searchBarContainer}>
-          <div style={styles.searchInputWrapper}>
+          <div ref={searchInputWrapperRef} style={styles.searchInputWrapper}>
             <input
               type="text"
               value={searchQuery}
