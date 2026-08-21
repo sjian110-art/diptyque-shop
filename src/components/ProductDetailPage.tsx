@@ -440,6 +440,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             <span style={styles.sectionLabel}>용량</span>
             <div style={styles.volumeOptions}>
               {['50ML', '75ML', '100ML'].map((vol) => {
+                const isEnabled = vol === '75ML';
                 const isActive = vol === selectedVolume;
                 return (
                   <button
@@ -448,8 +449,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       ...styles.volBtn,
                       fontWeight: isActive ? 600 : 400,
                       borderBottom: isActive ? '2px solid #000000' : '2px solid transparent',
+                      opacity: isEnabled ? 1 : 0.25,
+                      color: isEnabled ? '#000000' : '#888888',
+                      cursor: isEnabled ? 'pointer' : 'default',
+                      pointerEvents: isEnabled ? 'auto' : 'none',
                     }}
-                    onClick={() => setSelectedVolume(vol)}
+                    onClick={() => isEnabled && setSelectedVolume(vol)}
+                    disabled={!isEnabled}
                   >
                     {vol}
                   </button>
