@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface HeaderProps {
   onOpenCart?: () => void;
@@ -7,8 +7,39 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenCart, cartCount = 0, onLogoClick }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    // Detect the nearest scrollable ancestor (the app viewport container)
+    // and fall back to window if none found
+    const scrollEl = document.querySelector('.app-viewport') || window;
+
+    const handleScroll = () => {
+      const scrollTop =
+        scrollEl === window
+          ? window.scrollY
+          : (scrollEl as Element).scrollTop;
+      setIsScrolled(scrollTop > 8);
+    };
+
+    scrollEl.addEventListener('scroll', handleScroll, { passive: true });
+    return () => scrollEl.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const headerBackground = isScrolled
+    ? 'rgba(0, 0, 0, 0.45)'          // scrolled: semi-transparent dark
+    : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0) 100%)'; // top: gradient
+
   return (
-    <header style={styles.header}>
+    <header
+      style={{
+        ...styles.header,
+        background: headerBackground,
+        backdropFilter: isScrolled ? 'blur(6px)' : 'none',
+        WebkitBackdropFilter: isScrolled ? 'blur(6px)' : 'none',
+        transition: 'background 0.25s ease, backdrop-filter 0.25s ease',
+      }}
+    >
       {/* Self-contained branding styles for the logo button */}
       <style>{`
         .header-logo-btn {
@@ -70,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCart, cartCount = 0, onLog
 
 const styles: { [key: string]: React.CSSProperties } = {
   header: {
-    position: 'absolute',
+    position: 'fixed',  // was 'absolute' — now always visible on scroll
     top: 0,
     left: 0,
     width: '100%',
@@ -80,7 +111,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     padding: '0 16px',
     zIndex: 100,
-    background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%)',
+    // background and backdropFilter are set inline dynamically
   },
   hamburgerButton: {
     display: 'flex',
@@ -91,6 +122,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     background: 'transparent',
     padding: 0,
     border: 'none',
+    cursor: 'pointer',
   },
   hamburgerLine: {
     width: '100%',
@@ -110,7 +142,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontFamily: 'var(--font-serif)',
     fontSize: '20px',
     fontWeight: 300,
-    letterSpacing: '3px', // Reduced letter spacing from 5px to 3px to match real Diptyque proportions
+    letterSpacing: '3px',
     color: '#ffffff',
     userSelect: 'none',
     transition: 'color 200ms ease',
@@ -127,6 +159,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: '6px',
     background: 'transparent',
     position: 'relative',
+    cursor: 'pointer',
+    border: 'none',
   },
   iconImage: {
     width: '16px',
