@@ -86,7 +86,8 @@ export const MyPage: React.FC<MyPageProps> = ({
   }, []);
 
   return (
-    <div style={styles.pageContainer} className="animate-fade-in">
+    <>
+      <div style={styles.pageContainer} className="animate-fade-in">
       <style>{`
         .mypage-menu-item {
           display: flex;
@@ -354,12 +355,13 @@ export const MyPage: React.FC<MyPageProps> = ({
         <p style={styles.copyright}>© 2024 DIPTYQUE PARIS</p>
       </div>
 
+      </div>
       {/* Bottom Nav */}
       <BottomNav
         onHomeClick={onNavigateHome}
         activeTab="my"
       />
-    </div>
+    </>
   );
 };
 
