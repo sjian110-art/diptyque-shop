@@ -91,100 +91,90 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Main Menu List */}
-        <div style={styles.mainMenuList}>
-          {['EAU DE PARFUM', 'EAU DE TOILETTE', 'FIND YOUR SCENT', 'COLLECTIONS', 'MAISON'].map((item) => (
-            <a 
-              key={item} 
-              href={`#${item.toLowerCase().replace(/ /g, '-')}`}
-              style={styles.mainMenuItem}
-              onClick={(e) => {
-                e.preventDefault();
-                const target = e.currentTarget;
-                // Bouncy horizontal spring transition
-                target.animate(
-                  [
-                    { transform: 'translateX(0)',     offset: 0 },
-                    { transform: 'translateX(14px)',  offset: 0.35 },
-                    { transform: 'translateX(-3px)',  offset: 0.7 },
-                    { transform: 'translateX(0)',     offset: 1 },
-                  ],
-                  {
-                    duration: 380,
-                    easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-                    fill: 'none',
-                  }
-                );
-              }}
-            >
-              {item}
-            </a>
-          ))}
-        </div>
+        {/* Scrollable container for menu contents */}
+        <div className="side-menu-scroll-content" style={styles.scrollContent}>
+          {/* Main Menu List */}
+          <div style={styles.mainMenuList}>
+            {['EAU DE PARFUM', 'EAU DE TOILETTE', 'FIND YOUR SCENT', 'COLLECTIONS', 'MAISON'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase().replace(/ /g, '-')}`}
+                className="side-menu-main-item"
+                style={styles.mainMenuItem}
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Handled by CSS hover transition spring now
+                }}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
 
-        {/* Divider */}
-        <div style={styles.divider} />
+          {/* Divider */}
+          <div style={styles.divider} />
 
-        {/* Sub Menu List */}
-        <div style={styles.subMenuList}>
-          {['로그인 / 회원가입', '주문조회', '향수 비교하기', '위시리스트', '고객 서비스'].map((item) => (
-            <a 
-              key={item} 
-              href="#link"
-              className="side-menu-sub-item"
-              style={styles.subMenuItem}
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
-              {item}
-            </a>
-          ))}
-          
-          {/* Country Selection Container */}
-          <div style={styles.countryRowContainer}>
-            <div 
-              style={styles.countryRow} 
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-            >
-              <span style={styles.countryLabel}>국가: </span>
-              <span style={styles.countryValue}>
-                {selectedCountry}
-                <ChevronDown 
-                  size={11} 
-                  style={{
-                    ...styles.chevron,
-                    transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 200ms ease',
-                  }} 
-                />
-              </span>
-            </div>
+          {/* Sub Menu List */}
+          <div style={styles.subMenuList}>
+            {['로그인 / 회원가입', '주문조회', '향수 비교하기', '위시리스트', '고객 서비스'].map((item) => (
+              <a 
+                key={item} 
+                href="#link"
+                className="side-menu-sub-item"
+                style={styles.subMenuItem}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                {item}
+              </a>
+            ))}
+            
+            {/* Country Selection Container */}
+            <div style={styles.countryRowContainer}>
+              <div 
+                style={styles.countryRow} 
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <span style={styles.countryLabel}>국가: </span>
+                <span style={styles.countryValue}>
+                  {selectedCountry}
+                  <ChevronDown 
+                    size={11} 
+                    style={{
+                      ...styles.chevron,
+                      transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 200ms ease',
+                    }} 
+                  />
+                </span>
+              </div>
 
-            {/* Dropdown Scrollable Country List */}
-            <div 
-              className="country-dropdown-scrollbar"
-              style={{
-                ...styles.dropdownList,
-                maxHeight: dropdownOpen ? '150px' : '0px',
-                opacity: dropdownOpen ? 1 : 0,
-                pointerEvents: dropdownOpen ? 'auto' : 'none',
-              }}
-            >
-              {COUNTRIES.map((country) => {
-                const isSelected = country === "SOUTH KOREA";
-                return (
-                  <div 
-                    key={country}
-                    className={`country-item ${isSelected ? 'active' : ''}`}
-                    onClick={() => handleCountrySelect(country)}
-                    style={styles.dropdownItem}
-                  >
-                    <span style={{ flex: 1 }}>{country}</span>
-                    {isSelected && <span style={styles.checkMark}>✓</span>}
-                  </div>
-                );
-              })}
+              {/* Dropdown Scrollable Country List */}
+              <div 
+                className="country-dropdown-scrollbar"
+                style={{
+                  ...styles.dropdownList,
+                  maxHeight: dropdownOpen ? '150px' : '0px',
+                  opacity: dropdownOpen ? 1 : 0,
+                  pointerEvents: dropdownOpen ? 'auto' : 'none',
+                }}
+              >
+                {COUNTRIES.map((country) => {
+                  const isSelected = country === "SOUTH KOREA";
+                  return (
+                    <div 
+                      key={country}
+                      className={`country-item ${isSelected ? 'active' : ''}`}
+                      onClick={() => handleCountrySelect(country)}
+                      style={styles.dropdownItem}
+                    >
+                      <span style={{ flex: 1 }}>{country}</span>
+                      {isSelected && <span style={styles.checkMark}>✓</span>}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -213,6 +203,25 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
 
       {/* CSS stylesheet for hover, scrollbars and active transitions */}
       <style>{`
+        /* Main menu item spring bounce on hover */
+        .side-menu-main-item {
+          display: block;
+          transform: translateX(0);
+          transition: transform 320ms cubic-bezier(0.25, 1, 0.5, 1.25) !important;
+        }
+        .side-menu-main-item:hover {
+          transform: translateX(12px) !important;
+        }
+
+        /* Hide scrollbars for side menu scroll content */
+        .side-menu-scroll-content::-webkit-scrollbar {
+          display: none !important;
+        }
+        .side-menu-scroll-content {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+
         .side-menu-sub-item {
           color: #cccccc !important;
           transition: color 180ms ease !important;
@@ -304,6 +313,14 @@ const styles: { [key: string]: React.CSSProperties } = {
     transition: 'transform 300ms cubic-bezier(0.25, 1, 0.5, 1)',
     boxShadow: '4px 0 20px rgba(0, 0, 0, 0.4)',
     cursor: 'none !important',
+  },
+  scrollContent: {
+    flex: 1,
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    marginRight: '-4px',
+    paddingRight: '4px',
   },
   header: {
     display: 'flex',
