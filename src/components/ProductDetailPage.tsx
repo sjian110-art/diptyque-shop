@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Heart, ChevronDown, Minus, Plus } from 'lucide-react';
+import { Heart, ChevronDown, Minus, Plus } from 'lucide-react';
 import type { CompareItem } from './MyPage';
+import { Header } from './Header';
 
 interface ProductDetailPageProps {
   onBack: () => void;
@@ -329,57 +330,16 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             opacity: 1;
             transform: translate(-50%, 0);
           }
-          100% {
-            opacity: 0;
-            transform: translate(-50%, -10px);
           }
-        .header-logo-btn {
-          cursor: pointer;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: transparent;
-          border: none;
-          padding: 0;
-          transition: opacity 0.2s ease;
-        }
-        
-        .header-logo-btn:hover span {
-          color: #EAEAEA !important;
-        }
-      `}</style>
-
-      {/* Header top-bar */}
-      <header style={styles.header}>
-        <button style={styles.headerBtn} onClick={onBack} aria-label="Go Back">
-          <ArrowLeft size={20} strokeWidth={1.2} color="#ffffff" />
-        </button>
-        
-        <button 
-          style={styles.logoContainer} 
-          onClick={onBack}
-          className="header-logo-btn"
-          aria-label="Diptyque Home"
-        >
-          <span style={styles.logoText}>DIPTYQUE</span>
-        </button>
-
-        <button 
-          style={styles.headerBtn} 
-          onClick={onOpenCart} 
-          aria-label="Open Cart"
-          className={isBouncing ? 'animate-bounce-cart' : ''}
-        >
-          <img 
-            src="/assets_1/Cart.png" 
-            alt="Cart" 
-            style={styles.cartIcon}
-          />
-          {cartCount > 0 && (
-            <span style={styles.cartBadge}>{cartCount}</span>
-          )}
-        </button>
-      </header>
+        `}
+      </style>
+      <Header
+        showBackButton={true}
+        onBackClick={onBack}
+        onOpenCart={onOpenCart}
+        cartCount={cartCount}
+        isCartBouncing={isBouncing}
+      />
 
       {/* Scrollable Main body */}
       <div style={styles.scrollBody}>
@@ -536,73 +496,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     position: 'relative',
     paddingBottom: '40px',
   },
-  header: {
-    position: 'sticky',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '64px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 16px',
-    zIndex: 100,
-    backgroundColor: '#000000', // Black header top bar
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-  headerBtn: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '8px',
-    background: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    position: 'relative',
-  },
-  cartIcon: {
-    width: '16px',
-    height: '18px',
-    objectFit: 'contain',
-    filter: 'brightness(0) invert(1)', // Makes cart white
-  },
-  cartBadge: {
-    position: 'absolute',
-    top: '2px',
-    right: '2px',
-    width: '14px',
-    height: '14px',
-    borderRadius: '50%',
-    backgroundColor: '#ffffff',
-    color: '#000000',
-    fontSize: '8px',
-    fontWeight: 700,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-  },
-  logoContainer: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: '20px',
-    fontWeight: 300,
-    letterSpacing: '3px',
-    color: '#ffffff',
-    userSelect: 'none',
-    transition: 'color 200ms ease',
-  },
   scrollBody: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    paddingTop: '64px', // Space for fixed header
   },
   imageCardContainer: {
     width: 'calc(100% - 32px)',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, X } from 'lucide-react';
 import { auth, db } from '../firebase';
+import { Header } from './Header';
 import { 
   GoogleAuthProvider, 
   signInWithPopup, 
@@ -322,42 +323,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           color: #f5f1e8;
         }
 
-        .header-logo-btn {
-          cursor: pointer;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: transparent;
-          border: none;
-          padding: 0;
-          transition: opacity 0.2s ease;
-        }
-        
-        .header-logo-btn:hover span {
-          color: #EAEAEA !important;
-        }
-
-        /* Modal focus state */
         .modal-input-field:focus {
           border-color: #000000 !important;
           outline: none;
         }
       `}</style>
-
-      {/* Header (Fixed at top of page) */}
-      <header style={styles.header}>
-        <button style={styles.backButton} aria-label="Go Back" onClick={onBack}>
-          <ArrowLeft size={20} strokeWidth={1.2} color="#ffffff" />
-        </button>
-        <button 
-          style={styles.logoContainer} 
-          onClick={onBack}
-          className="header-logo-btn"
-          aria-label="Diptyque Home"
-        >
-          <span style={styles.logoText}>DIPTYQUE</span>
-        </button>
-      </header>
+      <Header showBackButton={true} onBackClick={onBack} />
 
       {/* Hero Section */}
       <section style={styles.heroSection}>
@@ -514,46 +485,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     backgroundColor: '#000000',
     minHeight: '100vh',
-  },
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '64px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '0 16px',
-    zIndex: 10,
-    backgroundColor: '#000000',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-  backButton: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '8px',
-    background: 'transparent',
-    cursor: 'pointer',
-    zIndex: 11,
-  },
-  logoContainer: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: '20px',
-    fontWeight: 300,
-    letterSpacing: '3px',
-    color: '#ffffff',
-    userSelect: 'none',
-    transition: 'color 200ms ease',
   },
   heroSection: {
     width: '100%',

@@ -281,10 +281,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
         }
       `}</style>
 
-      {/* Header bar wrapper to clear absolute layout */}
-      <div style={{ position: 'relative', height: '64px', width: '100%', backgroundColor: '#000000', flexShrink: 0 }}>
-        <Header onOpenCart={onOpenCart} cartCount={cartCount} onLogoClick={onBack} />
-      </div>
+      <Header onOpenCart={onOpenCart} cartCount={cartCount} onLogoClick={onBack} />
 
       {/* Main Form Scroll Container */}
       <div style={styles.scrollBody}>
@@ -783,6 +780,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     overflowY: 'auto',
     backgroundColor: '#ffffff',
+    paddingTop: '64px', // Space for fixed header
     paddingBottom: '96px', // Clear footer spacing
   },
   pageTitleContainer: {

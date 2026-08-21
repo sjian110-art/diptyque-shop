@@ -1,4 +1,5 @@
 import React from 'react';
+import { Header } from './Header';
 
 interface OrderCompletePageProps {
   recipient: string;
@@ -46,33 +47,8 @@ export const OrderCompletePage: React.FC<OrderCompletePageProps> = ({
           background-color: #222222;
         }
 
-        .header-logo-btn {
-          cursor: pointer;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: transparent;
-          border: none;
-          padding: 0;
-          transition: opacity 0.2s ease;
-        }
-        
-        .header-logo-btn:hover span {
-          color: #EAEAEA !important;
-        }
       `}</style>
-
-      {/* Header bar */}
-      <header style={styles.header}>
-        <button 
-          style={styles.logoContainer} 
-          onClick={onContinueShopping}
-          className="header-logo-btn"
-          aria-label="Diptyque Home"
-        >
-          <span style={styles.logoText}>DIPTYQUE</span>
-        </button>
-      </header>
+      <Header onLogoClick={onContinueShopping} showBackButton={false} />
 
       {/* Complete info panel */}
       <main style={styles.main}>
@@ -140,36 +116,12 @@ const styles: { [key: string]: React.CSSProperties } = {
     position: 'relative',
     color: '#000000',
   },
-  header: {
-    width: '100%',
-    height: '64px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000000', // Matches custom branding
-    position: 'relative',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-  logoContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logoText: {
-    fontFamily: 'var(--font-serif)',
-    fontSize: '20px',
-    fontWeight: 300,
-    letterSpacing: '3px',
-    color: '#ffffff',
-    userSelect: 'none',
-    transition: 'color 200ms ease',
-  },
   main: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '60px 24px',
+    padding: '124px 24px 60px 24px', // Increased top padding for fixed header clearance
     backgroundColor: '#ffffff',
   },
   iconContainer: {

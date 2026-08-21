@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 
 interface HeaderProps {
   onOpenCart?: () => void;
   cartCount?: number;
   onLogoClick?: () => void;
+  showBackButton?: boolean;
+  onBackClick?: () => void;
+  isCartBouncing?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenCart, cartCount = 0, onLogoClick }) => {
+export const Header: React.FC<HeaderProps> = ({
+  onOpenCart,
+  cartCount = 0,
+  onLogoClick,
+  showBackButton = false,
+  onBackClick,
+  isCartBouncing = false,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -56,19 +67,37 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCart, cartCount = 0, onLog
         .header-logo-btn:hover span {
           color: #EAEAEA !important;
         }
+
+        @keyframes bounce-cart {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-cart {
+          animation: bounce-cart 0.5s ease 2;
+        }
       `}</style>
 
-      {/* CSS-based minimal hamburger menu */}
-      <button style={styles.hamburgerButton} aria-label="Menu" onClick={() => console.log('Menu clicked')}>
-        <div style={styles.hamburgerLine} />
-        <div style={styles.hamburgerLine} />
-        <div style={styles.hamburgerLine} />
-      </button>
+      {/* Conditional: Hamburger Menu OR Back Button */}
+      {showBackButton ? (
+        <button 
+          style={styles.iconButton} 
+          aria-label="Go Back" 
+          onClick={onBackClick}
+        >
+          <ArrowLeft size={20} strokeWidth={1.2} color="#ffffff" />
+        </button>
+      ) : (
+        <button style={styles.hamburgerButton} aria-label="Menu" onClick={() => console.log('Menu clicked')}>
+          <div style={styles.hamburgerLine} />
+          <div style={styles.hamburgerLine} />
+          <div style={styles.hamburgerLine} />
+        </button>
+      )}
       
       {/* DIPTYQUE Logo */}
       <button 
         style={styles.logoContainer} 
-        onClick={onLogoClick}
+        onClick={showBackButton && onBackClick ? onBackClick : onLogoClick}
         className="header-logo-btn"
         aria-label="Diptyque Home"
       >
@@ -84,7 +113,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenCart, cartCount = 0, onLog
             style={styles.iconImage} 
           />
         </button>
-        <button style={styles.iconButton} aria-label="Cart" onClick={onOpenCart}>
+        <button 
+          style={styles.iconButton} 
+          aria-label="Cart" 
+          onClick={onOpenCart}
+          className={isCartBouncing ? 'animate-bounce-cart' : ''}
+        >
           <img 
             src="/assets_1/Cart.png" 
             alt="Cart" 
