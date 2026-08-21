@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Home_Hero_Background from '../assets/Home_Hero_Background.png';
 import Home_Hero2_Background from '../assets/Home_Hero2_Background.png';
 import Home_Hero3_Background from '../assets/Home_Hero3_Background.png';
+import App_Home_Banner1_New from '../assets/App_Home_Banner1_New.png';
+import App_Home_Banner1_Overlay_New from '../assets/App_Home_Banner1_Overlay_New.png';
 
 interface Slide {
   bg: string;
+  overlayImg?: string; // Optional image overlay layered above the dark tint
   subTitle: string;
   title: string;
   linkText: string;
@@ -12,9 +14,10 @@ interface Slide {
 
 const SLIDES: Slide[] = [
   {
-    bg: Home_Hero_Background,
-    subTitle: '오 드 퍼퓸',
-    title: '향이 머무는 순간',
+    bg: App_Home_Banner1_New,
+    overlayImg: App_Home_Banner1_Overlay_New,
+    subTitle: 'DIPTYQUE PARIS',
+    title: '시간을 담은 향기',
     linkText: '자세히 보기',
   },
   {
@@ -136,6 +139,24 @@ export const HeroSection: React.FC = () => {
             >
               {/* Opaque black layer (30% - 40% opacity overlay to keep typography readable) */}
               <div style={styles.overlay} />
+
+              {/* Optional image overlay (e.g. texture or branded graphic) */}
+              {slide.overlayImg && (
+                <img
+                  src={slide.overlayImg}
+                  alt=""
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    zIndex: 1,
+                    pointerEvents: 'none',
+                  }}
+                />
+              )}
               
               {/* Slide content texts overlay */}
               <div style={styles.textContainer}>
