@@ -9,6 +9,7 @@ interface HeaderProps {
   onBackClick?: () => void;
   isCartBouncing?: boolean;
   onSearchClick?: () => void;
+  onMenuClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   onBackClick,
   isCartBouncing = false,
   onSearchClick,
+  onMenuClick,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -89,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
           <ArrowLeft size={20} strokeWidth={1.2} color="#ffffff" />
         </button>
       ) : (
-        <button style={styles.hamburgerButton} aria-label="Menu" onClick={() => console.log('Menu clicked')}>
+        <button style={styles.hamburgerButton} aria-label="Menu" onClick={onMenuClick}>
           <div style={styles.hamburgerLine} />
           <div style={styles.hamburgerLine} />
           <div style={styles.hamburgerLine} />

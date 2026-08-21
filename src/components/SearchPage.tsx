@@ -18,6 +18,7 @@ interface SearchPageProps {
   onNavigateMyPage: () => void;
   onNavigateDetail: (productId: string) => void;
   onNavigateRecommend: (selectedScent: string) => void;
+  onMenuClick?: () => void;
 }
 
 export const SearchPage: React.FC<SearchPageProps> = ({
@@ -27,6 +28,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   onNavigateMyPage,
   onNavigateDetail,
   onNavigateRecommend,
+  onMenuClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedScentPill, setSelectedScentPill] = useState<string | null>(null);
@@ -161,6 +163,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
         onOpenCart={onOpenCart} 
         cartCount={cartCount} 
         onLogoClick={onNavigateHome} 
+        onMenuClick={onMenuClick}
       />
 
       <div style={styles.scrollBody}>

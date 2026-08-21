@@ -14,6 +14,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { MyPage } from './components/MyPage';
 import { SearchPage } from './components/SearchPage';
 import { RecommendPage } from './components/RecommendPage';
+import { SideMenu } from './components/SideMenu';
 import type { CartItemType } from './components/CartDrawer';
 import type { CompareItem } from './components/MyPage';
 import { auth } from './firebase';
@@ -38,6 +39,9 @@ function App() {
 
   // Selected scent parameter passed to recommendation result page
   const [selectedScent, setSelectedScent] = useState('전체');
+
+  // Sidebar Menu visibility state
+  const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
   // Forward mouse events to the parent window for the custom cursor effect
   useEffect(() => {
@@ -373,6 +377,7 @@ function App() {
           cartCount={totalCartCount}
           onLogoClick={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onMenuClick={() => setSideMenuOpen(true)}
         />
         <MyPage
           currentUser={currentUser}
@@ -399,6 +404,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
       </>
     );
   }
@@ -468,6 +474,7 @@ function App() {
           onPaymentSuccess={handlePaymentSuccess}
           currentUser={currentUser}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onMenuClick={() => setSideMenuOpen(true)}
         />
         <CartDrawer 
           isOpen={cartDrawerOpen}
@@ -480,6 +487,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
         {showSuccessToast && (
           <div style={styles.toast} className="animate-toast-complete">
             주문이 완료되었습니다.
@@ -492,15 +500,19 @@ function App() {
   // Render Order Complete Success Page
   if (currentPage === 'complete') {
     return (
-      <OrderCompletePage 
-        recipient={recipientName}
-        address={shippingAddress}
-        totalAmount={orderTotal}
-        itemCount={orderCount}
-        itemSummaryText={orderSummaryText}
-        onContinueShopping={handleContinueShopping}
-        onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
-      />
+      <>
+        <OrderCompletePage 
+          recipient={recipientName}
+          address={shippingAddress}
+          totalAmount={orderTotal}
+          itemCount={orderCount}
+          itemSummaryText={orderSummaryText}
+          onContinueShopping={handleContinueShopping}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onMenuClick={() => setSideMenuOpen(true)}
+        />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+      </>
     );
   }
 
@@ -526,6 +538,7 @@ function App() {
             setCurrentPage('recommend');
             window.scrollTo(0, 0);
           }}
+          onMenuClick={() => setSideMenuOpen(true)}
         />
         <CartDrawer
           isOpen={cartDrawerOpen}
@@ -538,6 +551,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
       </>
     );
   }
@@ -592,6 +606,7 @@ function App() {
           setCurrentPage('search');
           window.scrollTo(0, 0);
         }} 
+        onMenuClick={() => setSideMenuOpen(true)}
       />
       <main style={styles.main}>
         <HeroSection />
@@ -630,6 +645,7 @@ function App() {
         }}
         onProductClick={handleCartProductClick}
       />
+      <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
     </>
   );
 }
