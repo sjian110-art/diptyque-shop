@@ -48,12 +48,12 @@ export const HeroSection: React.FC = () => {
   const startXRef = useRef(0);
   const currentXRef = useRef(0);
 
-  // Helper to start automatic slide changes (every 3 seconds)
+  // Helper to start automatic slide changes (every 12 seconds for a highly premium, editorial tempo)
   const startAutoPlay = () => {
     stopAutoPlay();
     autoPlayIntervalRef.current = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
-    }, 3000);
+    }, 12000);
   };
 
   // Helper to clear timers
@@ -68,14 +68,14 @@ export const HeroSection: React.FC = () => {
     }
   };
 
-  // Schedule autoplay resumption after 5 seconds of no activity
+  // Schedule autoplay resumption after 12 seconds of no activity (matching the 12s interval)
   const handleInteractionEnd = () => {
     if (resumeTimeoutRef.current) {
       clearTimeout(resumeTimeoutRef.current);
     }
     resumeTimeoutRef.current = setTimeout(() => {
       startAutoPlay();
-    }, 5000);
+    }, 12000);
   };
 
   // Touch & Mouse Gesture Handlers
@@ -238,7 +238,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     justifyContent: 'flex-end',
     alignItems: 'center',
     paddingBottom: '80px',
-    transition: 'opacity 400ms ease-in-out, transform 400ms ease-in-out',
+    transition: 'opacity 1200ms cubic-bezier(0.25, 1, 0.3, 1), transform 1200ms cubic-bezier(0.25, 1, 0.3, 1)',
   },
   overlay: {
     position: 'absolute',
