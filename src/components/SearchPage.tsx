@@ -8,8 +8,7 @@ import Search_DO_SON from '../assets/Search_DO SON.png';
 import Search_PHILOSYKOS from '../assets/Search_PHILOSYKOS.png';
 import Search_LOmbre_dans_lEau from "../assets/Search_L'Ombre dans l'Eau.png";
 import Search_Icon from '../assets/Search_Icon.png';
-import Search_FIND_YOUR_SCENT_icon from '../assets/Search_FIND YOUR SCENT_icon.png';
-import Search_SCENT_OF_MEMORIES_icon from '../assets/Search_SCENT OF MEMORIES_icon.png';
+
 
 interface SearchPageProps {
   onOpenCart: () => void;
@@ -198,7 +197,6 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             <span style={styles.sectionSubtitle}>FIND YOUR SCENT</span>
             <h2 style={styles.sectionTitle}>
               <span style={styles.highlightBlue}>나만의 향</span>을 발견해보세요
-              <img src={Search_FIND_YOUR_SCENT_icon} alt="" style={styles.inlineIcon} />
             </h2>
           </div>
 
@@ -239,7 +237,6 @@ export const SearchPage: React.FC<SearchPageProps> = ({
             <span style={styles.sectionSubtitle}>SCENT OF MEMORIES</span>
             <h2 style={styles.sectionTitle}>
               <span style={styles.highlightPink}>기억 속 향</span>을 떠올려보세요
-              <img src={Search_SCENT_OF_MEMORIES_icon} alt="" style={styles.inlineIcon} />
             </h2>
           </div>
 
@@ -443,12 +440,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundPosition: '0 80%',
     padding: '0 2px',
   },
-  inlineIcon: {
-    height: '14px',
-    objectFit: 'contain',
-    verticalAlign: 'middle',
-    marginLeft: '6px',
-  },
+
   pillsGrid: {
     display: 'flex',
     flexWrap: 'wrap',
