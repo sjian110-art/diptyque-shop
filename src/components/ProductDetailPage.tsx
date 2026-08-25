@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Heart, ChevronDown, Minus, Plus } from 'lucide-react';
 import type { CompareItem } from './MyPage';
 import { Header } from './Header';
+import { BottomNav } from './BottomNav';
 
 interface ProductDetailPageProps {
   onBack: () => void;
@@ -11,6 +12,11 @@ interface ProductDetailPageProps {
   compareList?: CompareItem[];
   onToggleCompare?: (item: CompareItem) => void;
   onSearchClick?: () => void;
+  onNavigateHome: () => void;
+  onNavigateSearch: () => void;
+  onNavigateMyPage: () => void;
+  onNavigateShop: () => void;
+  preDetailPage?: string;
 }
 
 const ACCORDION_DATA = [
@@ -82,6 +88,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   compareList = [],
   onToggleCompare,
   onSearchClick,
+  onNavigateHome,
+  onNavigateSearch,
+  onNavigateMyPage,
+  onNavigateShop,
+  preDetailPage = 'home',
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedVolume, setSelectedVolume] = useState('75ML');
@@ -165,7 +176,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   };
 
   return (
-    <div style={styles.pageContainer} className="animate-fade-in">
+    <div style={styles.pageContainer}>
       {/* Self-contained CSS for high-performance hover states on white backgrounds */}
       <style>{`
         /* Fragrance tag outline hover styles */
@@ -345,7 +356,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
       />
 
       {/* Scrollable Main body */}
-      <div style={styles.scrollBody}>
+      <div style={styles.scrollBody} className="animate-fade-in">
         {/* Rounded card image container */}
         <div style={styles.imageCardContainer}>
           <button 
@@ -485,6 +496,22 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           상품이 장바구니에 담겼습니다.
         </div>
       )}
+
+      <BottomNav
+        activeTab={
+          preDetailPage === 'shop'
+            ? 'shop'
+            : preDetailPage === 'search' || preDetailPage === 'recommend'
+            ? 'search'
+            : preDetailPage === 'mypage'
+            ? 'my'
+            : 'home'
+        }
+        onHomeClick={onNavigateHome}
+        onSearchClick={onNavigateSearch}
+        onMyClick={onNavigateMyPage}
+        onShopClick={onNavigateShop}
+      />
     </div>
   );
 };
@@ -497,7 +524,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: '#ffffff', // Clean white background below header
     minHeight: '100vh',
     position: 'relative',
-    paddingBottom: '40px',
+    paddingBottom: '100px',
   },
   scrollBody: {
     width: '100%',

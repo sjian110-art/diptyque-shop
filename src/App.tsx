@@ -455,6 +455,11 @@ function App() {
           compareList={compareList}
           onToggleCompare={handleToggleCompare}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onNavigateSearch={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onNavigateMyPage={handleMyClick}
+          onNavigateShop={() => { setCurrentPage('shop'); setActiveShopTab('parfum'); window.scrollTo(0, 0); }}
+          preDetailPage={preDetailPage}
         />
         <CartDrawer 
           isOpen={cartDrawerOpen}
