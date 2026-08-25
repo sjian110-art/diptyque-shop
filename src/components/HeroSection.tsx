@@ -36,7 +36,11 @@ const SLIDES: Slide[] = [
   },
 ];
 
-export const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  onLearnMoreClick?: (slideIndex: number) => void;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ onLearnMoreClick }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   // Interaction and AutoPlay state refs
@@ -175,7 +179,9 @@ export const HeroSection: React.FC = () => {
                   style={styles.link}
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log(`Details clicked for slide: ${slide.title}`);
+                    if (onLearnMoreClick) {
+                      onLearnMoreClick(idx);
+                    }
                   }}
                 >
                   {slide.linkText}

@@ -713,7 +713,19 @@ function App() {
         />
       )}
       <main style={styles.main}>
-        <HeroSection />
+        <HeroSection onLearnMoreClick={(idx) => {
+          if (idx === 0) {
+            navigateToDetail('home');
+          } else if (idx === 1) {
+            setCurrentPage('shop');
+            setActiveShopTab('toilette');
+            window.scrollTo(0, 0);
+          } else if (idx === 2) {
+            setCurrentPage('shop');
+            setActiveShopTab('parfum');
+            window.scrollTo(0, 0);
+          }
+        }} />
         <CategorySection />
         <BestSellers onProductClick={(id) => {
           if (id === 'doson') {
