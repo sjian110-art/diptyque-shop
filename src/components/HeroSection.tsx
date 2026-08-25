@@ -141,6 +141,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onLearnMoreClick }) =>
                 backgroundImage: `url("${slide.bg}")`,
                 opacity: isActive ? 1 : 0,
                 transform: isActive ? 'translateX(0px)' : idx < currentIndex ? 'translateX(-20px)' : 'translateX(20px)',
+                pointerEvents: isActive ? 'auto' : 'none',
               }}
             >
               {/* Opaque black layer (30% - 40% opacity overlay to keep typography readable) */}
