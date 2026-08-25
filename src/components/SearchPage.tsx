@@ -427,9 +427,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: 500,
     color: '#000000',
     margin: 0,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
+    lineHeight: '1.4',
   },
   highlightBlue: {
     backgroundImage: 'linear-gradient(120deg, rgba(220, 235, 255, 0.7) 0%, rgba(220, 235, 255, 0.7) 100%)',
@@ -448,6 +446,8 @@ const styles: { [key: string]: React.CSSProperties } = {
   inlineIcon: {
     height: '14px',
     objectFit: 'contain',
+    verticalAlign: 'middle',
+    marginLeft: '6px',
   },
   pillsGrid: {
     display: 'flex',
