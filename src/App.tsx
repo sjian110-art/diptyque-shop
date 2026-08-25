@@ -49,6 +49,15 @@ function App() {
   const [preCollectionsPage, setPreCollectionsPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop'>('home');
   const [preCollectionsSideMenuOpen, setPreCollectionsSideMenuOpen] = useState(false);
 
+  // Navigation memory for returning from detail page
+  const [preDetailPage, setPreDetailPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop'>('home');
+
+  const navigateToDetail = (fromPage: typeof currentPage = currentPage) => {
+    setPreDetailPage(fromPage);
+    setCurrentPage('detail');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
   // Active tab state inside Shop Page
   const [activeShopTab, setActiveShopTab] = useState<'parfum' | 'toilette' | 'solid'>('parfum');
 
@@ -298,8 +307,7 @@ function App() {
       setPreCartPage(currentPage);
       setBackToCart(true);
       setCartDrawerOpen(false);
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      setCurrentPage('detail');
+      navigateToDetail(currentPage);
     }
   };
 
@@ -310,7 +318,7 @@ function App() {
       setCartDrawerOpen(true);
       setCurrentPage(preCartPage);
     } else {
-      setCurrentPage('home');
+      setCurrentPage(preDetailPage);
     }
   };
 
@@ -410,7 +418,7 @@ function App() {
           cartItems={cartItems}
           compareList={compareList}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
-          onNavigateDetail={() => { setCurrentPage('detail'); window.scrollTo({ top: 0, behavior: 'instant' }); }}
+          onNavigateDetail={() => navigateToDetail()}
           onNavigateSearch={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onNavigateShop={() => { setCurrentPage('shop'); setActiveShopTab('parfum'); window.scrollTo(0, 0); }}
           onLogout={async () => {
@@ -555,8 +563,7 @@ function App() {
           onNavigateMyPage={handleMyClick}
           onNavigateDetail={(id) => {
             if (id === 'doson') {
-              setCurrentPage('detail');
-              window.scrollTo({ top: 0, behavior: 'instant' });
+              navigateToDetail();
             } else {
               console.log(`Product clicked: ${id}`);
             }
@@ -599,8 +606,7 @@ function App() {
           onNavigateMyPage={handleMyClick}
           onNavigateDetail={(id) => {
             if (id === 'doson') {
-              setCurrentPage('detail');
-              window.scrollTo({ top: 0, behavior: 'instant' });
+              navigateToDetail();
             } else {
               console.log(`Product clicked: ${id}`);
             }
@@ -667,10 +673,7 @@ function App() {
           cartCount={totalCartCount}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onNavigateMyPage={handleMyClick}
-          onNavigateDetail={() => {
-            setCurrentPage('detail');
-            window.scrollTo({ top: 0, behavior: 'instant' });
-          }}
+          onNavigateDetail={() => navigateToDetail()}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onMenuClick={() => setSideMenuOpen(true)}
         />
@@ -713,8 +716,7 @@ function App() {
         <CategorySection />
         <BestSellers onProductClick={(id) => {
           if (id === 'doson') {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            setCurrentPage('detail');
+            navigateToDetail();
           } else {
             console.log(`Product clicked: ${id}`);
           }
