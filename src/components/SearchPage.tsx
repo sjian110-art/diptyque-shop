@@ -17,6 +17,7 @@ interface SearchPageProps {
   onNavigateMyPage: () => void;
   onNavigateDetail: (productId: string) => void;
   onNavigateRecommend: (selectedScent: string) => void;
+  onNavigateShop?: () => void;
   onMenuClick?: () => void;
   sideMenuOpen?: boolean;
 }
@@ -28,6 +29,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
   onNavigateMyPage,
   onNavigateDetail,
   onNavigateRecommend,
+  onNavigateShop,
   onMenuClick,
   sideMenuOpen = false,
 }) => {
@@ -303,6 +305,7 @@ export const SearchPage: React.FC<SearchPageProps> = ({
         onHomeClick={onNavigateHome}
         onMyClick={onNavigateMyPage}
         onSearchClick={() => {}}
+        onShopClick={onNavigateShop}
         activeTab="search"
       />
 

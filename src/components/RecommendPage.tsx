@@ -15,6 +15,7 @@ interface RecommendPageProps {
   onNavigateHome: () => void;
   onNavigateMyPage: () => void;
   onNavigateDetail: (productId: string) => void;
+  onNavigateShop?: () => void;
   onSearchClick?: () => void;
 }
 
@@ -26,6 +27,7 @@ export const RecommendPage: React.FC<RecommendPageProps> = ({
   onNavigateHome,
   onNavigateMyPage,
   onNavigateDetail,
+  onNavigateShop,
   onSearchClick,
 }) => {
   // Silence TS6133 lint error by logging the parameter
@@ -119,6 +121,7 @@ export const RecommendPage: React.FC<RecommendPageProps> = ({
         onHomeClick={onNavigateHome}
         onMyClick={onNavigateMyPage}
         onSearchClick={onBackToSearch}
+        onShopClick={onNavigateShop}
         activeTab="search"
       />
     </>

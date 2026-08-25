@@ -20,6 +20,7 @@ interface CollectionsPageProps {
   onSearchClick: () => void;
   onNavigateHome: () => void;
   onNavigateMyPage: () => void;
+  onNavigateShop: () => void;
   onMenuClick: () => void;
 }
 
@@ -41,6 +42,7 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
   onSearchClick,
   onNavigateHome,
   onNavigateMyPage,
+  onNavigateShop,
   onMenuClick,
 }) => {
   return (
@@ -93,6 +95,7 @@ export const CollectionsPage: React.FC<CollectionsPageProps> = ({
         onHomeClick={onNavigateHome}
         onSearchClick={onSearchClick}
         onMyClick={onNavigateMyPage}
+        onShopClick={onNavigateShop}
       />
 
       <style>{`

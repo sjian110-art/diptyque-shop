@@ -4,7 +4,7 @@ import { X, ChevronDown } from 'lucide-react';
 interface SideMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  onNavigate?: (page: 'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections') => void;
+  onNavigate?: (page: 'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop', tab?: 'parfum' | 'toilette' | 'solid') => void;
 }
 
 const COUNTRIES = [
@@ -109,6 +109,12 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, onNavigate 
                     onClose();
                   } else if (item === 'FIND YOUR SCENT' && onNavigate) {
                     onNavigate('search');
+                    onClose();
+                  } else if (item === 'EAU DE PARFUM' && onNavigate) {
+                    onNavigate('shop', 'parfum');
+                    onClose();
+                  } else if (item === 'EAU DE TOILETTE' && onNavigate) {
+                    onNavigate('shop', 'toilette');
                     onClose();
                   }
                 }}

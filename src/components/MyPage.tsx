@@ -22,6 +22,7 @@ interface MyPageProps {
   onNavigateHome: () => void;
   onNavigateDetail: () => void;
   onNavigateSearch: () => void;
+  onNavigateShop?: () => void;
   onLogout: () => void;
 }
 
@@ -47,6 +48,7 @@ export const MyPage: React.FC<MyPageProps> = ({
   onNavigateHome,
   onNavigateDetail,
   onNavigateSearch,
+  onNavigateShop,
   onLogout,
 }) => {
   const handleLogout = async () => {
@@ -333,10 +335,10 @@ export const MyPage: React.FC<MyPageProps> = ({
       </div>
 
       </div>
-      {/* Bottom Nav */}
       <BottomNav
         onHomeClick={onNavigateHome}
         onSearchClick={onNavigateSearch}
+        onShopClick={onNavigateShop}
         activeTab="my"
       />
     </>

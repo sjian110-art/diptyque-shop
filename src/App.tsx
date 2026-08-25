@@ -16,6 +16,7 @@ import { SearchPage } from './components/SearchPage';
 import { RecommendPage } from './components/RecommendPage';
 import { SideMenu } from './components/SideMenu';
 import { CollectionsPage } from './components/CollectionsPage';
+import { ShopPage } from './components/ShopPage';
 import type { CartItemType } from './components/CartDrawer';
 import type { CompareItem } from './components/MyPage';
 import { auth } from './firebase';
@@ -25,7 +26,7 @@ import { initKakao, getStoredKakaoUser, kakaoLogout } from './kakaoAuth';
 import type { KakaoUserProfile } from './kakaoAuth';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop'>('home');
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -36,7 +37,7 @@ function App() {
 
   // Navigation stack memory for returning to cart drawer on correct screen
   const [backToCart, setBackToCart] = useState(false);
-  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections'>('home');
+  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop'>('home');
 
   // Selected scent parameter passed to recommendation result page
   const [selectedScent, setSelectedScent] = useState('전체');
@@ -45,13 +46,22 @@ function App() {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
   // Navigation memory for returning from collections page
-  const [preCollectionsPage, setPreCollectionsPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections'>('home');
+  const [preCollectionsPage, setPreCollectionsPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop'>('home');
   const [preCollectionsSideMenuOpen, setPreCollectionsSideMenuOpen] = useState(false);
 
-  const handleSideMenuNavigate = (page: 'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections') => {
+  // Active tab state inside Shop Page
+  const [activeShopTab, setActiveShopTab] = useState<'parfum' | 'toilette' | 'solid'>('parfum');
+
+  const handleSideMenuNavigate = (
+    page: 'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections' | 'shop',
+    tab?: 'parfum' | 'toilette' | 'solid'
+  ) => {
     if (page === 'collections') {
       setPreCollectionsPage(currentPage);
       setPreCollectionsSideMenuOpen(true);
+    }
+    if (page === 'shop') {
+      setActiveShopTab(tab || 'parfum');
     }
     setCurrentPage(page);
   };
@@ -402,6 +412,7 @@ function App() {
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onNavigateDetail={() => { setCurrentPage('detail'); window.scrollTo({ top: 0, behavior: 'instant' }); }}
           onNavigateSearch={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onNavigateShop={() => { setCurrentPage('shop'); setActiveShopTab('parfum'); window.scrollTo(0, 0); }}
           onLogout={async () => {
             await kakaoLogout();
             setKakaoUser(null);
@@ -555,6 +566,7 @@ function App() {
             setCurrentPage('recommend');
             window.scrollTo(0, 0);
           }}
+          onNavigateShop={() => { setCurrentPage('shop'); setActiveShopTab('parfum'); window.scrollTo(0, 0); }}
           onMenuClick={() => setSideMenuOpen(true)}
           sideMenuOpen={sideMenuOpen}
         />
@@ -593,6 +605,7 @@ function App() {
               console.log(`Product clicked: ${id}`);
             }
           }}
+          onNavigateShop={() => { setCurrentPage('shop'); setActiveShopTab('parfum'); window.scrollTo(0, 0); }}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
         />
         <CartDrawer
@@ -624,6 +637,41 @@ function App() {
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
           onNavigateMyPage={handleMyClick}
+          onNavigateShop={() => { setCurrentPage('shop'); setActiveShopTab('parfum'); window.scrollTo(0, 0); }}
+          onMenuClick={() => setSideMenuOpen(true)}
+        />
+        <CartDrawer
+          isOpen={cartDrawerOpen}
+          onClose={() => setCartDrawerOpen(false)}
+          cartItems={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onCheckoutClick={() => {
+            setCartDrawerOpen(false);
+            setCurrentPage('checkout');
+          }}
+          onProductClick={handleCartProductClick}
+        />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
+      </>
+    );
+  }
+
+  // Render Shop Page
+  if (currentPage === 'shop') {
+    return (
+      <>
+        <ShopPage
+          activeTab={activeShopTab}
+          onChangeTab={setActiveShopTab}
+          onOpenCart={() => setCartDrawerOpen(true)}
+          cartCount={totalCartCount}
+          onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onNavigateMyPage={handleMyClick}
+          onNavigateDetail={() => {
+            setCurrentPage('detail');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+          }}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onMenuClick={() => setSideMenuOpen(true)}
         />
         <CartDrawer
@@ -682,6 +730,11 @@ function App() {
         }}
         onSearchClick={() => {
           setCurrentPage('search');
+          window.scrollTo(0, 0);
+        }}
+        onShopClick={() => {
+          setCurrentPage('shop');
+          setActiveShopTab('parfum');
           window.scrollTo(0, 0);
         }}
         activeTab="home"

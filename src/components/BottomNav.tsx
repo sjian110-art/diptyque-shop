@@ -4,6 +4,7 @@ interface BottomNavProps {
   onMyClick?: () => void;
   onHomeClick?: () => void;
   onSearchClick?: () => void;
+  onShopClick?: () => void;
   activeTab?: 'home' | 'shop' | 'search' | 'my';
 }
 
@@ -11,6 +12,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onMyClick,
   onHomeClick,
   onSearchClick,
+  onShopClick,
   activeTab = 'home',
 }) => {
   const getItemStyle = (tab: string) => ({
@@ -48,7 +50,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         style={getItemStyle('shop')}
         onClick={(e) => {
           e.preventDefault();
-          console.log('Shop tab clicked');
+          if (onShopClick) onShopClick();
         }}
       >
         <img
