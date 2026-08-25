@@ -16,20 +16,20 @@ interface CategoryItemProps {
 
 const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
   const [ripples, setRipples] = useState<RippleInstance[]>([]);
-  const textRef = useRef<HTMLSpanElement>(null);
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const nextId = useRef(0);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    if (!textRef.current) return;
+    if (!cardRef.current) return;
 
-    const rect = textRef.current.getBoundingClientRect();
+    const rect = cardRef.current.getBoundingClientRect();
 
-    // Click position relative to the text element
+    // Click position relative to the card element
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Ripple needs to cover the entire text element
+    // Ripple needs to cover the entire card element
     const maxDim = Math.max(rect.width, rect.height);
     const size = maxDim * 2.4;
 
@@ -45,31 +45,32 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
   return (
     <div style={styles.itemWrapper}>
       <a
+        ref={cardRef}
         href={`#category-${category.toLowerCase()}`}
         style={styles.item}
         onClick={handleClick}
         className="category-link"
       >
+        {/* Ripple container — clipped to card bounds */}
+        <span style={styles.rippleHost} aria-hidden="true">
+          {ripples.map((r) => (
+            <span
+              key={r.id}
+              className="ink-ripple"
+              style={{
+                width: r.size,
+                height: r.size,
+                left: r.x - r.size / 2,
+                top: r.y - r.size / 2,
+              }}
+            />
+          ))}
+        </span>
+
         <span
-          ref={textRef}
           style={styles.textContainer}
           className="category-text"
         >
-          {/* Ripple container — clipped to text bounds */}
-          <span style={styles.rippleHost} aria-hidden="true">
-            {ripples.map((r) => (
-              <span
-                key={r.id}
-                className="ink-ripple"
-                style={{
-                  width: r.size,
-                  height: r.size,
-                  left: r.x - r.size / 2,
-                  top: r.y - r.size / 2,
-                }}
-              />
-            ))}
-          </span>
           {category}
         </span>
 
@@ -97,14 +98,13 @@ export const CategorySection: React.FC = () => {
           position: relative;
         }
 
-        /* ── Hover: ivory colour only on the text itself ── */
-        .category-text:hover {
+        /* ── Hover: ivory color when card is hovered ── */
+        .category-link:hover .category-text {
           color: #f5f1e8;
         }
 
-        /* ── Arrow follows text hover ── */
-        .category-text:hover ~ .category-arrow,
-        .category-link:has(.category-text:hover) .category-arrow {
+        /* ── Arrow follows card hover ── */
+        .category-link:hover .category-arrow {
           transform: translateX(6px) !important;
           color: #f5f1e8 !important;
         }
@@ -188,8 +188,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     letterSpacing: '-0.02em',
     position: 'relative',
     display: 'inline-block',
-    // Clip ripple strictly within text bounds
-    overflow: 'hidden',
   },
   rippleHost: {
     position: 'absolute',
