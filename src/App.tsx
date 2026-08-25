@@ -676,6 +676,7 @@ function App() {
           onNavigateDetail={() => navigateToDetail()}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
           onMenuClick={() => setSideMenuOpen(true)}
+          sideMenuOpen={sideMenuOpen}
         />
         <CartDrawer
           isOpen={cartDrawerOpen}

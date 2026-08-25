@@ -22,6 +22,7 @@ interface ShopPageProps {
   onNavigateDetail: (productId: string) => void;
   onSearchClick: () => void;
   onMenuClick: () => void;
+  sideMenuOpen?: boolean;
 }
 
 interface ProductItem {
@@ -104,19 +105,22 @@ export const ShopPage: React.FC<ShopPageProps> = ({
   onNavigateDetail,
   onSearchClick,
   onMenuClick,
+  sideMenuOpen = false,
 }) => {
   const currentProducts = activeTab === 'parfum' ? PARFUM_PRODUCTS : TOILETTE_PRODUCTS;
 
   return (
     <div style={styles.container}>
       {/* Sticky Header with Hamburger Menu and Shopping Bag */}
-      <Header
-        onOpenCart={onOpenCart}
-        cartCount={cartCount}
-        onLogoClick={onNavigateHome}
-        onSearchClick={onSearchClick}
-        onMenuClick={onMenuClick}
-      />
+      {!sideMenuOpen && (
+        <Header
+          onOpenCart={onOpenCart}
+          cartCount={cartCount}
+          onLogoClick={onNavigateHome}
+          onSearchClick={onSearchClick}
+          onMenuClick={onMenuClick}
+        />
+      )}
 
       {/* Sticky Tabs below Header */}
       <div style={styles.tabsContainer}>
