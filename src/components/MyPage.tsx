@@ -268,11 +268,11 @@ export const MyPage: React.FC<MyPageProps> = ({
 
         {/* Action Button */}
         {compareList.length === 0 ? (
-          <button className="compare-action-btn" onClick={onNavigateDetail}>
+          <button className="compare-action-btn" onClick={() => onNavigateShop?.()}>
             향 담으러가기 <ArrowRight size={12} strokeWidth={1.5} />
           </button>
         ) : compareList.length === 1 ? (
-          <button className="compare-action-btn" onClick={onNavigateDetail}>
+          <button className="compare-action-btn" onClick={() => onNavigateShop?.()}>
             향 더 담으러가기 <ArrowRight size={12} strokeWidth={1.5} />
           </button>
         ) : (
