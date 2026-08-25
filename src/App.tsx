@@ -15,6 +15,7 @@ import { MyPage } from './components/MyPage';
 import { SearchPage } from './components/SearchPage';
 import { RecommendPage } from './components/RecommendPage';
 import { SideMenu } from './components/SideMenu';
+import { CollectionsPage } from './components/CollectionsPage';
 import type { CartItemType } from './components/CartDrawer';
 import type { CompareItem } from './components/MyPage';
 import { auth } from './firebase';
@@ -24,7 +25,7 @@ import { initKakao, getStoredKakaoUser, kakaoLogout } from './kakaoAuth';
 import type { KakaoUserProfile } from './kakaoAuth';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections'>('home');
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -35,7 +36,7 @@ function App() {
 
   // Navigation stack memory for returning to cart drawer on correct screen
   const [backToCart, setBackToCart] = useState(false);
-  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend'>('home');
+  const [preCartPage, setPreCartPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections'>('home');
 
   // Selected scent parameter passed to recommendation result page
   const [selectedScent, setSelectedScent] = useState('전체');
@@ -406,7 +407,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
       </>
     );
   }
@@ -490,7 +491,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
         {showSuccessToast && (
           <div style={styles.toast} className="animate-toast-complete">
             주문이 완료되었습니다.
@@ -515,7 +516,7 @@ function App() {
           onMenuClick={() => setSideMenuOpen(true)}
           sideMenuOpen={sideMenuOpen}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
       </>
     );
   }
@@ -556,7 +557,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
       </>
     );
   }
@@ -593,6 +594,35 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
+      </>
+    );
+  }
+
+  // Render Collections Page
+  if (currentPage === 'collections') {
+    return (
+      <>
+        <CollectionsPage
+          onBack={() => setCurrentPage('home')}
+          onOpenCart={() => setCartDrawerOpen(true)}
+          cartCount={totalCartCount}
+          onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
+          onNavigateHome={() => { setCurrentPage('home'); window.scrollTo(0, 0); }}
+          onNavigateMyPage={handleMyClick}
+          onMenuClick={() => setSideMenuOpen(true)}
+        />
+        <CartDrawer
+          isOpen={cartDrawerOpen}
+          onClose={() => setCartDrawerOpen(false)}
+          cartItems={cartItems}
+          onUpdateQuantity={handleUpdateQuantity}
+          onCheckoutClick={() => {
+            setCartDrawerOpen(false);
+            setCurrentPage('checkout');
+          }}
+          onProductClick={handleCartProductClick}
+        />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
       </>
     );
   }
@@ -652,7 +682,7 @@ function App() {
         }}
         onProductClick={handleCartProductClick}
       />
-      <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+      <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
     </>
   );
 }

@@ -10,6 +10,7 @@ interface HeaderProps {
   isCartBouncing?: boolean;
   onSearchClick?: () => void;
   onMenuClick?: () => void;
+  backgroundColor?: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   isCartBouncing = false,
   onSearchClick,
   onMenuClick,
+  backgroundColor,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -41,9 +43,9 @@ export const Header: React.FC<HeaderProps> = ({
     return () => scrollEl.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const headerBackground = isScrolled
+  const headerBackground = backgroundColor || (isScrolled
     ? 'rgba(0, 0, 0, 0.45)'          // scrolled: semi-transparent dark
-    : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0) 100%)'; // top: gradient
+    : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.60) 0%, rgba(0, 0, 0, 0) 100%)'); // top: gradient
 
   return (
     <header

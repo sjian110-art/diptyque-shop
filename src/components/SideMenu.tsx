@@ -4,6 +4,7 @@ import { X, ChevronDown } from 'lucide-react';
 interface SideMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onNavigate?: (page: 'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections') => void;
 }
 
 const COUNTRIES = [
@@ -22,7 +23,7 @@ const COUNTRIES = [
   "UKRAINE", "UNITED ARAB EMIRATES", "UNITED KINGDOM", "UNITED STATES", "URUGUAY", "UZBEKISTAN", "VENEZUELA", "VIETNAM", "YEMEN", "ZIMBABWE"
 ];
 
-export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
+export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, onNavigate }) => {
   const [shouldRender, setShouldRender] = useState(isOpen);
   const [animateClose, setAnimateClose] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -103,7 +104,13 @@ export const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose }) => {
                 style={styles.mainMenuItem}
                 onClick={(e) => {
                   e.preventDefault();
-                  // Handled by CSS hover transition spring now
+                  if (item === 'COLLECTIONS' && onNavigate) {
+                    onNavigate('collections');
+                    onClose();
+                  } else if (item === 'FIND YOUR SCENT' && onNavigate) {
+                    onNavigate('search');
+                    onClose();
+                  }
                 }}
               >
                 {item}
