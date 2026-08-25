@@ -44,6 +44,18 @@ function App() {
   // Sidebar Menu visibility state
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
+  // Navigation memory for returning from collections page
+  const [preCollectionsPage, setPreCollectionsPage] = useState<'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections'>('home');
+  const [preCollectionsSideMenuOpen, setPreCollectionsSideMenuOpen] = useState(false);
+
+  const handleSideMenuNavigate = (page: 'home' | 'login' | 'detail' | 'checkout' | 'complete' | 'mypage' | 'search' | 'recommend' | 'collections') => {
+    if (page === 'collections') {
+      setPreCollectionsPage(currentPage);
+      setPreCollectionsSideMenuOpen(true);
+    }
+    setCurrentPage(page);
+  };
+
   // Forward mouse events to the parent window for the custom cursor effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -407,7 +419,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
       </>
     );
   }
@@ -491,7 +503,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
         {showSuccessToast && (
           <div style={styles.toast} className="animate-toast-complete">
             주문이 완료되었습니다.
@@ -516,7 +528,7 @@ function App() {
           onMenuClick={() => setSideMenuOpen(true)}
           sideMenuOpen={sideMenuOpen}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
       </>
     );
   }
@@ -557,7 +569,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
       </>
     );
   }
@@ -603,7 +615,10 @@ function App() {
     return (
       <>
         <CollectionsPage
-          onBack={() => setCurrentPage('home')}
+          onBack={() => {
+            setCurrentPage(preCollectionsPage);
+            setSideMenuOpen(preCollectionsSideMenuOpen);
+          }}
           onOpenCart={() => setCartDrawerOpen(true)}
           cartCount={totalCartCount}
           onSearchClick={() => { setCurrentPage('search'); window.scrollTo(0, 0); }}
@@ -622,7 +637,7 @@ function App() {
           }}
           onProductClick={handleCartProductClick}
         />
-        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
+        <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
       </>
     );
   }
@@ -682,7 +697,7 @@ function App() {
         }}
         onProductClick={handleCartProductClick}
       />
-      <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={(page) => setCurrentPage(page)} />
+      <SideMenu isOpen={sideMenuOpen} onClose={() => setSideMenuOpen(false)} onNavigate={handleSideMenuNavigate} />
     </>
   );
 }
